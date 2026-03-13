@@ -215,5 +215,5 @@ This project was developed as a **Final Year Project (FYP)**. All rights reserve
 ---
 
 <p align="center">
-  Built with ❤️ using local AI — no cloud, no latency, no compromises.
+  Built with ❤️ — no cloud, no latency, no compromises.
 </p>
