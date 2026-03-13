@@ -64,8 +64,9 @@ uploads/
 # Logs
 *.log
 
-# Markdown docs
+# Markdown docs (except README)
 *.md
+!README.md
 
 # Misc files (notes, zips, standalone scripts)
 *.zip
