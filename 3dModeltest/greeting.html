@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRM Character Greeting</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0E101B 0%, #1a1f35 100%);
+      color: #E8EDFF;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(14, 16, 27, 0.95);
+      color: #00F6FF;
+      font-size: 1.5rem;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .loading-overlay.hidden {
+      display: none;
+    }
+
+    .loading-text {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px 50px;
+      border: 2px solid #00F6FF;
+      box-shadow: 0 0 30px rgba(0, 246, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 246, 255, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(0, 246, 255, 0.8);
+      }
+    }
+
+    .dialogue-box {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(14, 16, 27, 0.95);
+      border: 2px solid #00F6FF;
+      border-radius: 15px;
+      padding: 25px 35px;
+      max-width: 600px;
+      box-shadow: 0 0 40px rgba(0, 246, 255, 0.4);
+      opacity: 0;
+      transition: all 0.8s ease;
+      z-index: 50;
+    }
+
+    .dialogue-box.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .dialogue-text {
+      font-size: 1.3rem;
+      color: #E8EDFF;
+      line-height: 1.6;
+      text-align: center;
+      animation: typewriter 1.5s steps(40) forwards;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #00F6FF;
+    }
+
+    @keyframes typewriter {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    .dialogue-box.show .dialogue-text {
+      animation: typewriter 1.5s steps(40) forwards;
+    }
+
+    .character-name {
+      position: absolute;
+      top: -15px;
+      left: 30px;
+      background: linear-gradient(135deg, #00F6FF, #7B2DFF);
+      padding: 5px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 0 15px rgba(0, 246, 255, 0.5);
+    }
+
+    .status-indicator {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(14, 16, 27, 0.9);
+      border: 1px solid rgba(0, 246, 255, 0.3);
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #9FADC6;
+    }
+
+    .status-indicator .status-label {
+      color: #00F6FF;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="canvas3d"></canvas>
+  </div>
+
+  <div id="loading" class="loading-overlay">
+    <div class="loading-text">LOADING CHARACTER...</div>
+  </div>
+
+  <div id="statusIndicator" class="status-indicator" style="display: none;">
+    <div class="status-label">Status</div>
+    <div id="statusText">Waving...</div>
+  </div>
+
+  <div id="dialogueBox" class="dialogue-box">
+    <div class="character-name">🎭 Character</div>
+    <div class="dialogue-text" id="dialogueText">
+      你今天有什么计划吗？
+    </div>
+  </div>
+
+  <!-- Import Three.js and VRM -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+        "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@2.1.0/lib/three-vrm.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+    import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
+
+    let scene, camera, renderer, clock;
+    let vrm = null;
+    let mixer = null;
+    let currentAction = null;
+    let idleAction = null;
+    let neck, spine;
+    let blinkTimer = 0;
+    let nextBlinkTime = 3;
+    let legBones = {};
+    let originalLegPositions = {};
+
+    // Initialize Three.js scene
+    function init() {
+      const canvas = document.getElementById('canvas3d');
+      const container = document.getElementById('canvas-container');
+
+      // Create scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0E101B);
+
+      // Create camera
+      camera = new THREE.PerspectiveCamera(
+        30,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        20
+      );
+      camera.position.set(0, 3.0, 6.5);
+      camera.lookAt(0, 1.2, 0);
+
+      // Create renderer
+      renderer = new THREE.WebGLRenderer({ 
+        canvas,
+        antialias: true 
+      });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+
+      // Three-point lighting
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+      keyLight.position.set(1, 1.5, 2);
+      scene.add(keyLight);
+
+      const fillLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(fillLight);
+
+      const rimLight = new THREE.DirectionalLight(0x88aaff, 0.6);
+      rimLight.position.set(-0.5, 1.5, -1.5);
+      scene.add(rimLight);
+
+      const frontLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      frontLight.position.set(0, 1.2, 3);
+      scene.add(frontLight);
+
+      // Create clock
+      clock = new THREE.Clock();
+
+      // Load VRM model
+      loadVRMModel();
+
+      // Handle window resize
+      window.addEventListener('resize', onWindowResize);
+
+      // Start animation loop
+      animate();
+    }
+
+    // Load VRM model
+    function loadVRMModel() {
+      const loader = new GLTFLoader();
+      loader.register((parser) => new VRMLoaderPlugin(parser));
+
+      console.log('🔍 Loading VRM model from: avatar.vrm');
+
+      loader.load(
+        'avatar.vrm',
+        (gltf) => {
+          vrm = gltf.userData.vrm;
+
+          if (!vrm) {
+            console.error('❌ VRM model not found in GLTF');
+            document.getElementById('loading').classList.add('hidden');
+            return;
+          }
+
+          console.log('✅ VRM model loaded successfully:', vrm);
+
+          // Create wrapper group
+          const characterWrapper = new THREE.Group();
+          characterWrapper.name = 'characterWrapper';
+          characterWrapper.add(vrm.scene);
+          scene.add(characterWrapper);
+
+          // Apply transformations
+          characterWrapper.scale.set(2.1, 2.1, 2.1);
+          characterWrapper.position.y = -0.6;
+
+          console.log('📦 Character wrapper created');
+
+          // Rotate VRM to face camera
+          VRMUtils.rotateVRM0(vrm);
+
+          // Create animation mixer for FBX animations
+          mixer = new THREE.AnimationMixer(vrm.scene);
+
+          // Get bone references for cute pose adjustments
+          if (vrm.humanoid) {
+            neck = vrm.humanoid.getRawBoneNode('neck');
+            spine = vrm.humanoid.getRawBoneNode('spine');
+
+            // Get leg bones to freeze during waving
+            legBones.leftUpperLeg = vrm.humanoid.getRawBoneNode('leftUpperLeg');
+            legBones.leftLowerLeg = vrm.humanoid.getRawBoneNode('leftLowerLeg');
+            legBones.leftFoot = vrm.humanoid.getRawBoneNode('leftFoot');
+            legBones.rightUpperLeg = vrm.humanoid.getRawBoneNode('rightUpperLeg');
+            legBones.rightLowerLeg = vrm.humanoid.getRawBoneNode('rightLowerLeg');
+            legBones.rightFoot = vrm.humanoid.getRawBoneNode('rightFoot');
+            legBones.hips = vrm.humanoid.getRawBoneNode('hips');
+
+            // Save original leg positions and rotations
+            Object.keys(legBones).forEach(key => {
+              if (legBones[key]) {
+                originalLegPositions[key] = {
+                  position: legBones[key].position.clone(),
+                  rotation: legBones[key].rotation.clone()
+                };
+              }
+            });
+
+            // Cute head tilt to the right (10 degrees) 💕
+            if (neck) {
+              neck.rotation.z = THREE.MathUtils.degToRad(-10); // Tilt right
+            }
+
+            // Lean forward slightly (cute pose - like leaning toward screen)
+            if (spine) {
+              spine.rotation.x = THREE.MathUtils.degToRad(5); // Lean forward 5 degrees
+            }
+
+            console.log('🦾 Cute pose configured - Head tilt, forward lean, and frozen legs');
+          }
+
+          // Set joy expression (full happiness! 😊)
+          setExpression('joy', 1.0);
+
+          console.log('✅ VRM ready! Now loading idle animation as default...');
+          
+          // Load idle animation first (default pose)
+          loadIdleAnimation();
+        },
+        (progress) => {
+          const percent = (progress.loaded / progress.total) * 100;
+          console.log(`📥 Loading: ${percent.toFixed(1)}%`);
+        },
+        (error) => {
+          console.error('❌ Error loading VRM:', error);
+          document.getElementById('loading').classList.add('hidden');
+          alert('Failed to load VRM model. Make sure you are running this from a web server (http://localhost:8000)');
+        }
+      );
+    }
+
+    // Load FBX waving animation
+    function loadFBXAnimation() {
+      const fbxLoader = new FBXLoader();
+      
+      console.log('🔍 Loading FBX animation: AvatarSample_A@Waving.fbx');
+
+      fbxLoader.load(
+        'AvatarSample_A@Waving.fbx',
+        (fbx) => {
+          console.log('✅ FBX loaded successfully:', fbx);
+          
+          if (fbx.animations && fbx.animations.length > 0) {
+            const fbxAnimation = fbx.animations[0];
+            console.log('🎬 Animation found:', fbxAnimation.name, 'Duration:', fbxAnimation.duration.toFixed(2));
+            
+            // Fade out idle and fade in waving animation
+            if (idleAction) {
+              idleAction.fadeOut(0.5);
+            }
+            
+            // Play the waving animation with 0.3x speed
+            currentAction = mixer.clipAction(fbxAnimation);
+            currentAction.setLoop(THREE.LoopRepeat);
+            currentAction.timeScale = 0.3; // Slow down to 0.3x speed for graceful wave
+            currentAction.reset();
+            currentAction.fadeIn(0.5);
+            currentAction.play();
+            
+            console.log('▶️ Playing waving animation at 0.3x speed');
+
+            // Hide loading screen
+            document.getElementById('loading').classList.add('hidden');
+            
+            // Show status indicator
+            document.getElementById('statusIndicator').style.display = 'block';
+            document.getElementById('statusText').textContent = 'Waving (0.3x speed)';
+
+            // After 5 seconds, stop waving and show dialogue
+            setTimeout(() => {
+              if (currentAction) {
+                currentAction.fadeOut(0.5);
+              }
+              
+              // Switch to idle animation
+              if (idleAction) {
+                idleAction.reset();
+                idleAction.fadeIn(0.5);
+                idleAction.play();
+                console.log('▶️ Switched to idle animation');
+              }
+              
+              document.getElementById('statusText').textContent = 'Idle';
+
+              // Show dialogue box
+              setTimeout(() => {
+                document.getElementById('dialogueBox').classList.add('show');
+              }, 300);
+
+              console.log('✅ Animation sequence complete');
+            }, 5000);
+          } else {
+            console.warn('⚠️ No animations found in FBX file');
+            document.getElementById('loading').classList.add('hidden');
+          }
+        },
+        (progress) => {
+          const percent = (progress.loaded / progress.total) * 100;
+          console.log(`📥 FBX Loading: ${percent.toFixed(1)}%`);
+        },
+        (error) => {
+          console.error('❌ Error loading FBX:', error);
+          document.getElementById('loading').classList.add('hidden');
+        }
+      );
+    }
+
+    // Load idle animation
+    function loadIdleAnimation() {
+      const fbxLoader = new FBXLoader();
+      
+      console.log('🔍 Loading idle animation: Idle.fbx');
+
+      fbxLoader.load(
+        'Idle.fbx',
+        (fbx) => {
+          console.log('✅ Idle animation loaded successfully');
+          
+          if (fbx.animations && fbx.animations.length > 0) {
+            const idleClip = fbx.animations[0];
+            console.log('🎬 Idle animation found:', idleClip.name, 'Duration:', idleClip.duration.toFixed(2));
+            
+            // Play idle animation immediately as default pose
+            idleAction = mixer.clipAction(idleClip);
+            idleAction.setLoop(THREE.LoopRepeat);
+            idleAction.timeScale = 1.0;
+            idleAction.play();
+            
+            console.log('▶️ Playing idle animation as default pose');
+            
+            // Now load waving animation
+            loadFBXAnimation();
+          } else {
+            console.warn('⚠️ No animations found in Idle.fbx file');
+            document.getElementById('loading').classList.add('hidden');
+          }
+        },
+        (progress) => {
+          const percent = (progress.loaded / progress.total) * 100;
+          console.log(`📥 Idle Loading: ${percent.toFixed(1)}%`);
+        },
+        (error) => {
+          console.error('❌ Error loading Idle.fbx:', error);
+          document.getElementById('loading').classList.add('hidden');
+        }
+      );
+    }
+
+    // Set expression
+    function setExpression(name, weight = 1.0) {
+      if (!vrm || !vrm.expressionManager) {
+        return;
+      }
+
+      try {
+        // Reset all expressions
+        const expressions = ['happy', 'sad', 'angry', 'surprised', 'neutral', 'joy'];
+        expressions.forEach(exp => {
+          try {
+            vrm.expressionManager.setValue(exp, 0);
+          } catch (e) {}
+        });
+
+        // Set target expression
+        vrm.expressionManager.setValue(name, weight);
+        console.log(`😊 Expression set: ${name} = ${weight.toFixed(2)}`);
+      } catch (error) {
+        console.warn(`⚠️ Failed to set expression '${name}':`, error);
+      }
+    }
+
+    // Automatic random blinking (cute!)
+    function updateBlinking(deltaTime) {
+      if (!vrm || !vrm.expressionManager) return;
+
+      blinkTimer += deltaTime;
+
+      if (blinkTimer >= nextBlinkTime) {
+        // Trigger blink
+        try {
+          vrm.expressionManager.setValue('blink', 1.0);
+          
+          // Reset blink after 0.15 seconds
+          setTimeout(() => {
+            if (vrm && vrm.expressionManager) {
+              vrm.expressionManager.setValue('blink', 0);
+            }
+          }, 150);
+
+          // Random next blink time (2-5 seconds)
+          nextBlinkTime = 2 + Math.random() * 3;
+          blinkTimer = 0;
+        } catch (e) {
+          console.warn('⚠️ Blink expression not available');
+        }
+      }
+    }
+
+    // Freeze leg movement during animation
+    function freezeLegs() {
+      if (!currentAction || !currentAction.isRunning()) return;
+
+      // Restore original leg positions and rotations
+      Object.keys(legBones).forEach(key => {
+        const bone = legBones[key];
+        const original = originalLegPositions[key];
+        
+        if (bone && original) {
+          bone.position.copy(original.position);
+          bone.rotation.copy(original.rotation);
+        }
+      });
+    }
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const delta = clock.getDelta();
+
+      // Update VRM
+      if (vrm) {
+        vrm.update(delta);
+
+        // Update automatic blinking
+        updateBlinking(delta);
+      }
+
+      // Update FBX animation mixer
+      if (mixer) {
+        mixer.update(delta);
+        
+        // Freeze legs after animation updates
+        freezeLegs();
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    // Handle window resize
+    function onWindowResize() {
+      const container = document.getElementById('canvas-container');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    // Start the app
+    init();
+  </script>
+</body>
+</html>

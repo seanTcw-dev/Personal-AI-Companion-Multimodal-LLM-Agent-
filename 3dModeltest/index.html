@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRM Model Inspector</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #0E101B;
+      color: #E8EDFF;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00F6FF;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 20px rgba(0, 246, 255, 0.6);
+    }
+
+    .inspector-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0, 246, 255, 0.3);
+    }
+
+    h2 {
+      margin: 0;
+      color: #00F6FF;
+      text-shadow: 0 0 10px rgba(0, 246, 255, 0.5);
+      flex-grow: 1;
+      font-size: 1.8rem;
+    }
+
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #00F6FF, #7B2DFF);
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+    }
+
+    button:hover:not(:disabled) {
+      box-shadow: 0 0 20px rgba(0, 246, 255, 0.5);
+      transform: translateY(-2px);
+      filter: brightness(1.2);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(0, 246, 255, 0.2);
+      border-top-color: #00F6FF;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .results {
+      display: none;
+    }
+
+    .results.show {
+      display: block;
+    }
+
+    .info-section {
+      background: rgba(26, 31, 53, 0.6);
+      border: 1px solid rgba(0, 246, 255, 0.2);
+      padding: 20px;
+      margin-bottom: 20px;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+    }
+
+    .info-section h3 {
+      margin: 0 0 15px 0;
+      color: #00F6FF;
+      font-size: 1.2rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: rgba(10, 12, 22, 0.5);
+      border-left: 2px solid #00F6FF;
+    }
+
+    .info-item .label {
+      color: #9FADC6;
+    }
+
+    .info-item .value {
+      color: #00F6FF;
+      font-weight: 600;
+    }
+
+    .list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .list-item {
+      padding: 10px;
+      background: rgba(10, 12, 22, 0.4);
+      border-left: 2px solid rgba(0, 246, 255, 0.5);
+      font-size: 0.9rem;
+    }
+
+    .success {
+      color: #00FF00;
+      font-weight: bold;
+    }
+
+    .error {
+      color: #FF4444;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎭 VRM Model Inspector</h1>
+    
+    <div class="inspector-header">
+      <h2>Model Analysis Tool</h2>
+      <button id="inspectBtn" onclick="inspectModel()">Inspect Model</button>
+      <button id="exportJsonBtn" onclick="exportJSON()" style="display: none;">Export JSON</button>
+      <button id="exportReportBtn" onclick="exportReport()" style="display: none;">Export Report</button>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+      <div class="spinner"></div>
+      <p>Analyzing model components...</p>
+    </div>
+
+    <!-- 3D Model Preview -->
+    <div id="modelPreview" style="display: none; margin-bottom: 20px;">
+      <div class="info-section">
+        <h3>🎭 3D Model Preview & Testing</h3>
+        <canvas id="canvas3d" style="width: 100%; height: 500px; background: linear-gradient(135deg, #0E101B 0%, #1a1f35 100%); border-radius: 8px;"></canvas>
+        
+        <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- Expression Controls -->
+          <div>
+            <h4 style="color: #00F6FF; margin-bottom: 10px;">😊 Test Expressions</h4>
+            <select id="expressionSelect" style="width: 100%; padding: 10px; background: rgba(10, 12, 22, 0.8); color: #00F6FF; border: 1px solid rgba(0, 246, 255, 0.3); border-radius: 4px; margin-bottom: 10px;">
+              <option value="">Select Expression...</option>
+            </select>
+            <input type="range" id="expressionSlider" min="0" max="1" step="0.01" value="0" style="width: 100%;" disabled>
+            <div style="text-align: center; color: #9FADC6; margin-top: 5px;">
+              Weight: <span id="expressionValue">0.00</span>
+            </div>
+          </div>
+
+          <!-- Bone Controls -->
+          <div>
+            <h4 style="color: #00F6FF; margin-bottom: 10px;">🦴 Test Bones</h4>
+            <select id="boneSelect" style="width: 100%; padding: 10px; background: rgba(10, 12, 22, 0.8); color: #00F6FF; border: 1px solid rgba(0, 246, 255, 0.3); border-radius: 4px; margin-bottom: 10px;">
+              <option value="">Select Bone...</option>
+            </select>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
+              <div>
+                <label style="color: #9FADC6; font-size: 0.8rem;">Rotate X</label>
+                <input type="range" id="boneRotateX" min="-180" max="180" step="1" value="0" style="width: 100%;" disabled>
+              </div>
+              <div>
+                <label style="color: #9FADC6; font-size: 0.8rem;">Rotate Y</label>
+                <input type="range" id="boneRotateY" min="-180" max="180" step="1" value="0" style="width: 100%;" disabled>
+              </div>
+              <div>
+                <label style="color: #9FADC6; font-size: 0.8rem;">Rotate Z</label>
+                <input type="range" id="boneRotateZ" min="-180" max="180" step="1" value="0" style="width: 100%;" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 15px; text-align: center;">
+          <button onclick="resetModel()" style="padding: 8px 16px;">Reset Model</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="results" class="results">
+      <div class="info-section">
+        <h3>📊 Basic Information</h3>
+        <div class="info-grid" id="basicInfo"></div>
+      </div>
+
+      <div class="info-section">
+        <h3 id="expressionTitle">😊 Expressions</h3>
+        <div class="list" id="expressionList"></div>
+      </div>
+
+      <div class="info-section">
+        <h3 id="boneTitle">🦴 Bones</h3>
+        <div class="list" id="boneList"></div>
+      </div>
+
+      <div class="info-section">
+        <h3 id="materialTitle">🎨 Materials</h3>
+        <div class="list" id="materialList"></div>
+      </div>
+
+      <div class="info-section">
+        <h3>🔺 Mesh Complexity</h3>
+        <div id="meshInfo"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Three.js and VRM -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+        "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@2.1.0/lib/three-vrm.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { VRMLoaderPlugin } from '@pixiv/three-vrm';
+
+    let analysisData = null;
+    let currentVRM = null;
+    let scene, camera, renderer, clock;
+    let selectedBone = null;
+    let originalBoneRotation = null;
+
+    window.inspectModel = async function() {
+      const inspectBtn = document.getElementById('inspectBtn');
+      const loading = document.getElementById('loading');
+      const results = document.getElementById('results');
+
+      inspectBtn.disabled = true;
+      loading.style.display = 'block';
+      results.classList.remove('show');
+
+      try {
+        const loader = new GLTFLoader();
+        loader.register((parser) => new VRMLoaderPlugin(parser));
+
+        console.log('🔍 Starting VRM Model Inspection...');
+        console.log('📂 Loading from: avatar.vrm');
+
+        const gltf = await new Promise((resolve, reject) => {
+          loader.load(
+            'avatar.vrm',
+            resolve,
+            (progress) => {
+              const percent = (progress.loaded / progress.total) * 100;
+              console.log(`📥 Loading: ${percent.toFixed(1)}%`);
+            },
+            reject
+          );
+        });
+
+        const vrm = gltf.userData.vrm;
+        if (!vrm) {
+          throw new Error('VRM model not found');
+        }
+
+        console.log('✅ Model loaded successfully!');
+
+        // Store VRM for interactive controls
+        currentVRM = vrm;
+
+        // Analyze the model
+        analysisData = {
+          basic: {
+            modelName: vrm.meta?.name || 'Unnamed',
+            author: vrm.meta?.author || 'Unknown',
+            vrmVersion: vrm.meta?.metaVersion || 'Unknown',
+            totalObjects: countObjects(vrm.scene),
+            hasHumanoid: !!vrm.humanoid,
+            hasExpressionManager: !!vrm.expressionManager
+          },
+          expressions: analyzeExpressions(vrm),
+          bones: analyzeBones(vrm),
+          materials: analyzeMaterials(vrm),
+          meshes: analyzeMeshes(vrm)
+        };
+
+        displayResults(analysisData);
+        
+        // Initialize 3D preview
+        init3DPreview(vrm);
+        
+        // Auto-download report
+        exportReport();
+
+        document.getElementById('exportJsonBtn').style.display = 'inline-block';
+        document.getElementById('exportReportBtn').style.display = 'inline-block';
+
+        console.log('✅ Analysis complete!');
+      } catch (error) {
+        console.error('❌ Error:', error);
+        alert('Failed to load model: ' + error.message);
+      } finally {
+        loading.style.display = 'none';
+        inspectBtn.disabled = false;
+      }
+    };
+
+    function countObjects(object) {
+      let count = 1;
+      object.children.forEach(child => {
+        count += countObjects(child);
+      });
+      return count;
+    }
+
+    function analyzeExpressions(vrm) {
+      if (!vrm.expressionManager) return { available: false, expressions: [] };
+
+      const expressionNames = [
+        'happy', 'angry', 'sad', 'relaxed', 'surprised',
+        'neutral', 'joy', 'sorrow', 'fun',
+        'blink', 'blinkLeft', 'blinkRight',
+        'lookUp', 'lookDown', 'lookLeft', 'lookRight',
+        'aa', 'ih', 'ou', 'ee', 'oh', 'extra'
+      ];
+
+      const expressions = [];
+      expressionNames.forEach(name => {
+        try {
+          const value = vrm.expressionManager.getValue(name);
+          if (value !== undefined) {
+            expressions.push({ name, currentValue: value });
+          }
+        } catch (e) {}
+      });
+
+      return { available: true, totalExpressions: expressions.length, expressions };
+    }
+
+    function analyzeBones(vrm) {
+      if (!vrm.humanoid) return { available: false, bones: [] };
+
+      const boneNames = [
+        'hips', 'spine', 'chest', 'upperChest', 'neck', 'head',
+        'leftShoulder', 'leftUpperArm', 'leftLowerArm', 'leftHand',
+        'rightShoulder', 'rightUpperArm', 'rightLowerArm', 'rightHand',
+        'leftUpperLeg', 'leftLowerLeg', 'leftFoot', 'leftToes',
+        'rightUpperLeg', 'rightLowerLeg', 'rightFoot', 'rightToes',
+        'leftEye', 'rightEye', 'jaw'
+      ];
+
+      const bones = [];
+      boneNames.forEach(boneName => {
+        const bone = vrm.humanoid.getRawBoneNode(boneName);
+        if (bone) bones.push({ name: boneName });
+      });
+
+      return { available: true, totalBones: bones.length, bones };
+    }
+
+    function analyzeMaterials(vrm) {
+      const materials = [];
+      vrm.scene.traverse((object) => {
+        if (object.isMesh && object.material) {
+          const mats = Array.isArray(object.material) ? object.material : [object.material];
+          mats.forEach(m => {
+            if (!materials.find(existing => existing.name === m.name)) {
+              materials.push({ name: m.name, type: m.type });
+            }
+          });
+        }
+      });
+      return { totalMaterials: materials.length, materials };
+    }
+
+    function analyzeMeshes(vrm) {
+      let totalVertices = 0;
+      let totalFaces = 0;
+      let meshCount = 0;
+
+      vrm.scene.traverse((object) => {
+        if (object.isMesh) {
+          meshCount++;
+          const geometry = object.geometry;
+          const vertices = geometry.attributes.position?.count || 0;
+          const faces = geometry.index ? geometry.index.count / 3 : vertices / 3;
+          totalVertices += vertices;
+          totalFaces += faces;
+        }
+      });
+
+      return {
+        totalMeshes: meshCount,
+        totalVertices: Math.floor(totalVertices),
+        totalFaces: Math.floor(totalFaces)
+      };
+    }
+
+    function displayResults(data) {
+      // Basic info
+      const basicInfo = document.getElementById('basicInfo');
+      basicInfo.innerHTML = `
+        <div class="info-item"><span class="label">Model Name:</span><span class="value">${data.basic.modelName}</span></div>
+        <div class="info-item"><span class="label">Author:</span><span class="value">${data.basic.author}</span></div>
+        <div class="info-item"><span class="label">VRM Version:</span><span class="value">${data.basic.vrmVersion}</span></div>
+        <div class="info-item"><span class="label">Total Objects:</span><span class="value">${data.basic.totalObjects}</span></div>
+        <div class="info-item"><span class="label">Has Humanoid:</span><span class="value ${data.basic.hasHumanoid ? 'success' : 'error'}">${data.basic.hasHumanoid ? '✅ YES' : '❌ NO'}</span></div>
+        <div class="info-item"><span class="label">Has Expressions:</span><span class="value ${data.basic.hasExpressionManager ? 'success' : 'error'}">${data.basic.hasExpressionManager ? '✅ YES' : '❌ NO'}</span></div>
+      `;
+
+      // Expressions
+      document.getElementById('expressionTitle').textContent = `😊 Expressions (${data.expressions.totalExpressions})`;
+      const expressionList = document.getElementById('expressionList');
+      expressionList.innerHTML = data.expressions.expressions
+        .map(e => `<div class="list-item">${e.name}</div>`)
+        .join('');
+
+      // Bones
+      document.getElementById('boneTitle').textContent = `🦴 Bones (${data.bones.totalBones})`;
+      const boneList = document.getElementById('boneList');
+      boneList.innerHTML = data.bones.bones
+        .map(b => `<div class="list-item">${b.name}</div>`)
+        .join('');
+
+      // Materials
+      document.getElementById('materialTitle').textContent = `🎨 Materials (${data.materials.totalMaterials})`;
+      const materialList = document.getElementById('materialList');
+      materialList.innerHTML = data.materials.materials
+        .map(m => `<div class="list-item">${m.name}<br><small>${m.type}</small></div>`)
+        .join('');
+
+      // Meshes
+      const meshInfo = document.getElementById('meshInfo');
+      meshInfo.innerHTML = `
+        <div class="info-grid">
+          <div class="info-item"><span class="label">Total Meshes:</span><span class="value">${data.meshes.totalMeshes}</span></div>
+          <div class="info-item"><span class="label">Total Vertices:</span><span class="value">${data.meshes.totalVertices.toLocaleString()}</span></div>
+          <div class="info-item"><span class="label">Total Faces:</span><span class="value">${data.meshes.totalFaces.toLocaleString()}</span></div>
+        </div>
+      `;
+
+      document.getElementById('results').classList.add('show');
+    }
+
+    window.exportJSON = function() {
+      if (!analysisData) return;
+      
+      const dataStr = JSON.stringify(analysisData, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+      const link = document.createElement('a');
+      link.href = dataUri;
+      link.download = `vrm-analysis-${Date.now()}.json`;
+      link.click();
+      console.log('✅ JSON exported!');
+    };
+
+    window.exportReport = function() {
+      if (!analysisData) return;
+
+      const data = analysisData;
+      let report = '';
+      report += '═══════════════════════════════════════════════════════════\n';
+      report += '           VRM MODEL COMPONENT ANALYSIS REPORT             \n';
+      report += '═══════════════════════════════════════════════════════════\n\n';
+      
+      report += '📊 BASIC INFORMATION\n';
+      report += '─────────────────────────────────────────────────────────\n';
+      report += `Model Name:      ${data.basic.modelName}\n`;
+      report += `Author:          ${data.basic.author}\n`;
+      report += `VRM Version:     ${data.basic.vrmVersion}\n`;
+      report += `Total Objects:   ${data.basic.totalObjects}\n`;
+      report += `Has Humanoid:    ${data.basic.hasHumanoid ? '✅ YES' : '❌ NO'}\n`;
+      report += `Has Expressions: ${data.basic.hasExpressionManager ? '✅ YES' : '❌ NO'}\n\n`;
+      
+      report += `😊 AVAILABLE EXPRESSIONS (${data.expressions.totalExpressions})\n`;
+      report += '─────────────────────────────────────────────────────────\n';
+      report += 'USE THESE IN YOUR CODE:\n\n';
+      data.expressions.expressions.forEach(expr => {
+        report += `  • ${expr.name.padEnd(15)} - vrm.expressionManager.setValue('${expr.name}', 1.0)\n`;
+      });
+      report += '\n';
+      
+      report += `🦴 AVAILABLE BONES (${data.bones.totalBones})\n`;
+      report += '─────────────────────────────────────────────────────────\n';
+      data.bones.bones.forEach(bone => {
+        report += `  • ${bone.name.padEnd(20)} - vrm.humanoid.getRawBoneNode('${bone.name}')\n`;
+      });
+      report += '\n';
+      
+      report += `🎨 MATERIALS (${data.materials.totalMaterials})\n`;
+      report += '─────────────────────────────────────────────────────────\n';
+      data.materials.materials.forEach(mat => {
+        report += `  • ${mat.name} (${mat.type})\n`;
+      });
+      report += '\n';
+      
+      report += '🔺 MESH COMPLEXITY\n';
+      report += '─────────────────────────────────────────────────────────\n';
+      report += `Total Meshes:    ${data.meshes.totalMeshes}\n`;
+      report += `Total Vertices:  ${data.meshes.totalVertices.toLocaleString()}\n`;
+      report += `Total Faces:     ${data.meshes.totalFaces.toLocaleString()}\n\n`;
+      
+      report += '═══════════════════════════════════════════════════════════\n';
+      report += `Generated: ${new Date().toLocaleString()}\n`;
+      report += '═══════════════════════════════════════════════════════════\n';
+      
+      const blob = new Blob([report], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `VRM-Model-Components-${data.basic.modelName}-${Date.now()}.txt`;
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      console.log('✅ Report downloaded!');
+    };
+
+    // Initialize 3D Preview
+    function init3DPreview(vrm) {
+      const canvas = document.getElementById('canvas3d');
+      const container = document.getElementById('modelPreview');
+      
+      // Setup Three.js scene
+      scene = new THREE.Scene();
+      scene.background = null;
+      
+      // Camera
+      camera = new THREE.PerspectiveCamera(30, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      camera.position.set(0, 3.0, 6.5);
+      camera.lookAt(0, 1.5, 0);
+      
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      
+      // Lighting (three-point lighting)
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+      keyLight.position.set(1, 1, 1);
+      scene.add(keyLight);
+      
+      const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+      fillLight.position.set(-1, 0, -1);
+      scene.add(fillLight);
+      
+      const rimLight = new THREE.DirectionalLight(0xffffff, 0.6);
+      rimLight.position.set(0, 1, -2);
+      scene.add(rimLight);
+      
+      const frontLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      frontLight.position.set(0, 0, 1);
+      scene.add(frontLight);
+      
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+      scene.add(ambientLight);
+      
+      // Add VRM model to scene
+      const modelWrapper = new THREE.Group();
+      modelWrapper.add(vrm.scene);
+      modelWrapper.scale.set(2.1, 2.1, 2.1);
+      modelWrapper.position.y = -0.6;
+      scene.add(modelWrapper);
+      
+      // Clock for animations
+      clock = new THREE.Clock();
+      
+      // Setup controls
+      setupExpressionControls(analysisData.expressions.expressions);
+      setupBoneControls(analysisData.bones.bones);
+      
+      // Show preview
+      container.style.display = 'block';
+      
+      // Start animation loop
+      animate();
+      
+      // Handle window resize
+      window.addEventListener('resize', onWindowResize);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      if (currentVRM) {
+        const delta = clock.getDelta();
+        currentVRM.update(delta);
+      }
+      
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      const canvas = document.getElementById('canvas3d');
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    }
+
+    function setupExpressionControls(expressions) {
+      const select = document.getElementById('expressionSelect');
+      const slider = document.getElementById('expressionSlider');
+      const valueDisplay = document.getElementById('expressionValue');
+      
+      // Populate expression dropdown
+      expressions.forEach(expr => {
+        const option = document.createElement('option');
+        option.value = expr.name;
+        option.textContent = expr.name;
+        select.appendChild(option);
+      });
+      
+      // Expression select handler
+      select.addEventListener('change', (e) => {
+        if (e.target.value) {
+          slider.disabled = false;
+          slider.value = 0;
+          valueDisplay.textContent = '0.00';
+          // Reset all expressions first
+          expressions.forEach(expr => {
+            currentVRM.expressionManager.setValue(expr.name, 0);
+          });
+        } else {
+          slider.disabled = true;
+        }
+      });
+      
+      // Expression slider handler
+      slider.addEventListener('input', (e) => {
+        const expressionName = select.value;
+        const weight = parseFloat(e.target.value);
+        
+        if (expressionName && currentVRM) {
+          currentVRM.expressionManager.setValue(expressionName, weight);
+          valueDisplay.textContent = weight.toFixed(2);
+        }
+      });
+    }
+
+    function setupBoneControls(bones) {
+      const select = document.getElementById('boneSelect');
+      const rotateX = document.getElementById('boneRotateX');
+      const rotateY = document.getElementById('boneRotateY');
+      const rotateZ = document.getElementById('boneRotateZ');
+      
+      // Populate bone dropdown
+      bones.forEach(bone => {
+        const option = document.createElement('option');
+        option.value = bone.name;
+        option.textContent = bone.name;
+        select.appendChild(option);
+      });
+      
+      // Bone select handler
+      select.addEventListener('change', (e) => {
+        if (e.target.value) {
+          selectedBone = currentVRM.humanoid.getRawBoneNode(e.target.value);
+          if (selectedBone) {
+            // Store original rotation
+            originalBoneRotation = {
+              x: selectedBone.rotation.x,
+              y: selectedBone.rotation.y,
+              z: selectedBone.rotation.z
+            };
+            
+            // Enable sliders
+            rotateX.disabled = false;
+            rotateY.disabled = false;
+            rotateZ.disabled = false;
+            
+            // Reset sliders
+            rotateX.value = 0;
+            rotateY.value = 0;
+            rotateZ.value = 0;
+          }
+        } else {
+          selectedBone = null;
+          rotateX.disabled = true;
+          rotateY.disabled = true;
+          rotateZ.disabled = true;
+        }
+      });
+      
+      // Bone rotation handlers
+      function updateBoneRotation() {
+        if (selectedBone && originalBoneRotation) {
+          const x = THREE.MathUtils.degToRad(parseFloat(rotateX.value));
+          const y = THREE.MathUtils.degToRad(parseFloat(rotateY.value));
+          const z = THREE.MathUtils.degToRad(parseFloat(rotateZ.value));
+          
+          selectedBone.rotation.set(
+            originalBoneRotation.x + x,
+            originalBoneRotation.y + y,
+            originalBoneRotation.z + z
+          );
+        }
+      }
+      
+      rotateX.addEventListener('input', updateBoneRotation);
+      rotateY.addEventListener('input', updateBoneRotation);
+      rotateZ.addEventListener('input', updateBoneRotation);
+    }
+
+    window.resetModel = function() {
+      if (!currentVRM) return;
+      
+      // Reset all expressions
+      const expressionSelect = document.getElementById('expressionSelect');
+      const expressionSlider = document.getElementById('expressionSlider');
+      const expressionValue = document.getElementById('expressionValue');
+      
+      analysisData.expressions.expressions.forEach(expr => {
+        currentVRM.expressionManager.setValue(expr.name, 0);
+      });
+      
+      expressionSelect.value = '';
+      expressionSlider.value = 0;
+      expressionSlider.disabled = true;
+      expressionValue.textContent = '0.00';
+      
+      // Reset bone
+      const boneSelect = document.getElementById('boneSelect');
+      const rotateX = document.getElementById('boneRotateX');
+      const rotateY = document.getElementById('boneRotateY');
+      const rotateZ = document.getElementById('boneRotateZ');
+      
+      if (selectedBone && originalBoneRotation) {
+        selectedBone.rotation.set(
+          originalBoneRotation.x,
+          originalBoneRotation.y,
+          originalBoneRotation.z
+        );
+      }
+      
+      boneSelect.value = '';
+      rotateX.value = 0;
+      rotateY.value = 0;
+      rotateZ.value = 0;
+      rotateX.disabled = true;
+      rotateY.disabled = true;
+      rotateZ.disabled = true;
+      
+      selectedBone = null;
+      originalBoneRotation = null;
+      
+      console.log('✅ Model reset!');
+    };
+  </script>
+</body>
+</html>

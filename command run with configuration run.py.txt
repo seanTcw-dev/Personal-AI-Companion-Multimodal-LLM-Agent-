@@ -1,0 +1,2 @@
+cd "c:\Users\SeanTeng\Desktop\Anime Model Chatbot\backend"
+C:\Users\SeanTeng\anaconda3\envs\aniChatbot_final\python.exe run.py

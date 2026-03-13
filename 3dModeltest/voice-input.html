@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Input Test - Web Speech API</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+    }
+
+    .voice-section {
+      margin-bottom: 30px;
+    }
+
+    .mic-button {
+      display: block;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 20px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 3rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .mic-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .mic-button.listening {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+      }
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(245, 87, 108, 0.8);
+      }
+    }
+
+    .status {
+      text-align: center;
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 20px;
+      min-height: 24px;
+    }
+
+    .status.listening {
+      color: #f5576c;
+      font-weight: bold;
+    }
+
+    .status.success {
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    .transcript-box {
+      background: #f5f5f5;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 20px;
+      min-height: 150px;
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .transcript-box.empty {
+      color: #999;
+      font-style: italic;
+    }
+
+    .interim {
+      color: #999;
+      font-style: italic;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .control-group {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .control-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      background: white;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    button.action-btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button.clear-btn {
+      background: #ff5252;
+      color: white;
+    }
+
+    button.clear-btn:hover {
+      background: #ff1744;
+    }
+
+    button.copy-btn {
+      background: #4caf50;
+      color: white;
+    }
+
+    button.copy-btn:hover {
+      background: #45a049;
+    }
+
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      color: #1976d2;
+      margin-top: 20px;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .error-box {
+      background: #ffebee;
+      border-left: 4px solid #f44336;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      color: #c62828;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .error-box.show {
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎤 Voice Input</h1>
+    <p class="subtitle">Web Speech API - Click microphone to start speaking</p>
+
+    <div class="voice-section">
+      <button id="micBtn" class="mic-button" title="Click to start/stop recording">
+        🎤
+      </button>
+      
+      <div id="status" class="status">Click the microphone to start</div>
+
+      <div id="transcript" class="transcript-box empty">
+        Your speech will appear here...
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="languageSelect">Language:</label>
+          <select id="languageSelect">
+            <option value="en-US">English (US)</option>
+            <option value="en-GB">English (UK)</option>
+            <option value="zh-CN">Chinese (Simplified)</option>
+            <option value="zh-TW">Chinese (Traditional)</option>
+            <option value="ja-JP">Japanese</option>
+            <option value="ko-KR">Korean</option>
+            <option value="es-ES">Spanish</option>
+            <option value="fr-FR">French</option>
+            <option value="de-DE">German</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="modeSelect">Recognition Mode:</label>
+          <select id="modeSelect">
+            <option value="continuous">Continuous</option>
+            <option value="single">Single Phrase</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn clear-btn" onclick="clearTranscript()">Clear Text</button>
+        <button class="action-btn copy-btn" onclick="copyTranscript()">Copy Text</button>
+      </div>
+
+      <div class="info-box">
+        <strong>💡 How to use:</strong>
+        1. Click the microphone button<br>
+        2. Allow microphone access when prompted<br>
+        3. Start speaking clearly<br>
+        4. Click again to stop recording
+      </div>
+
+      <div id="errorBox" class="error-box">
+        <strong>⚠️ Error:</strong>
+        <span id="errorMessage"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check browser support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      document.getElementById('errorBox').classList.add('show');
+      document.getElementById('errorMessage').textContent = 'Your browser does not support Web Speech API. Please use Chrome, Edge, or Safari.';
+      document.getElementById('micBtn').disabled = true;
+    }
+
+    let recognition = null;
+    let isListening = false;
+    let finalTranscript = '';
+
+    // Initialize Speech Recognition
+    function initRecognition() {
+      recognition = new SpeechRecognition();
+      
+      // Get settings
+      const language = document.getElementById('languageSelect').value;
+      const mode = document.getElementById('modeSelect').value;
+      
+      recognition.lang = language;
+      recognition.continuous = (mode === 'continuous');
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+
+      // Event handlers
+      recognition.onstart = () => {
+        console.log('🎤 Speech recognition started');
+        isListening = true;
+        updateUI();
+      };
+
+      recognition.onresult = (event) => {
+        let interimTranscript = '';
+        
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + ' ';
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+        
+        displayTranscript(finalTranscript, interimTranscript);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('❌ Speech recognition error:', event.error);
+        
+        let errorMessage = 'An error occurred';
+        
+        switch(event.error) {
+          case 'no-speech':
+            errorMessage = 'No speech detected. Please try again.';
+            break;
+          case 'audio-capture':
+            errorMessage = 'No microphone found. Please check your microphone.';
+            break;
+          case 'not-allowed':
+            errorMessage = 'Microphone access denied. Please allow microphone access.';
+            break;
+          case 'network':
+            errorMessage = 'Network error. Please check your internet connection.';
+            break;
+          default:
+            errorMessage = `Error: ${event.error}`;
+        }
+        
+        document.getElementById('errorBox').classList.add('show');
+        document.getElementById('errorMessage').textContent = errorMessage;
+        
+        isListening = false;
+        updateUI();
+      };
+
+      recognition.onend = () => {
+        console.log('🎤 Speech recognition ended');
+        isListening = false;
+        updateUI();
+        
+        // Auto-restart if in continuous mode and still supposed to be listening
+        const mode = document.getElementById('modeSelect').value;
+        if (mode === 'continuous' && isListening) {
+          recognition.start();
+        }
+      };
+    }
+
+    // Toggle recording
+    document.getElementById('micBtn').addEventListener('click', () => {
+      if (!recognition) {
+        initRecognition();
+      }
+      
+      if (isListening) {
+        recognition.stop();
+        isListening = false;
+      } else {
+        // Hide error box
+        document.getElementById('errorBox').classList.remove('show');
+        
+        // Start recognition
+        try {
+          recognition.start();
+        } catch (error) {
+          console.error('Error starting recognition:', error);
+          // Reinitialize and try again
+          initRecognition();
+          recognition.start();
+        }
+      }
+      
+      updateUI();
+    });
+
+    // Update UI based on listening state
+    function updateUI() {
+      const micBtn = document.getElementById('micBtn');
+      const status = document.getElementById('status');
+      
+      if (isListening) {
+        micBtn.classList.add('listening');
+        micBtn.textContent = '🔴';
+        status.textContent = '🎙️ Listening... (Click to stop)';
+        status.classList.add('listening');
+        status.classList.remove('success');
+      } else {
+        micBtn.classList.remove('listening');
+        micBtn.textContent = '🎤';
+        
+        if (finalTranscript) {
+          status.textContent = '✅ Recording stopped';
+          status.classList.add('success');
+          status.classList.remove('listening');
+        } else {
+          status.textContent = 'Click the microphone to start';
+          status.classList.remove('listening', 'success');
+        }
+      }
+    }
+
+    // Display transcript
+    function displayTranscript(final, interim) {
+      const transcriptBox = document.getElementById('transcript');
+      
+      if (!final && !interim) {
+        transcriptBox.classList.add('empty');
+        transcriptBox.innerHTML = 'Your speech will appear here...';
+        return;
+      }
+      
+      transcriptBox.classList.remove('empty');
+      
+      let html = final;
+      if (interim) {
+        html += `<span class="interim">${interim}</span>`;
+      }
+      
+      transcriptBox.innerHTML = html || 'Listening...';
+    }
+
+    // Clear transcript
+    window.clearTranscript = function() {
+      finalTranscript = '';
+      displayTranscript('', '');
+      document.getElementById('status').textContent = 'Transcript cleared';
+      document.getElementById('status').classList.remove('listening', 'success');
+      console.log('🗑️ Transcript cleared');
+    };
+
+    // Copy transcript
+    window.copyTranscript = function() {
+      if (!finalTranscript.trim()) {
+        alert('Nothing to copy!');
+        return;
+      }
+      
+      navigator.clipboard.writeText(finalTranscript.trim()).then(() => {
+        const status = document.getElementById('status');
+        const originalText = status.textContent;
+        status.textContent = '✅ Copied to clipboard!';
+        status.classList.add('success');
+        
+        setTimeout(() => {
+          status.textContent = originalText;
+        }, 2000);
+        
+        console.log('📋 Copied to clipboard');
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy to clipboard');
+      });
+    };
+
+    // Language change handler
+    document.getElementById('languageSelect').addEventListener('change', () => {
+      if (isListening) {
+        recognition.stop();
+      }
+      recognition = null;
+    });
+
+    // Mode change handler
+    document.getElementById('modeSelect').addEventListener('change', () => {
+      if (isListening) {
+        recognition.stop();
+      }
+      recognition = null;
+    });
+  </script>
+</body>
+</html>

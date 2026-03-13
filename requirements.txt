@@ -1,0 +1,28 @@
+# Core Web Framework Dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+websockets==11.0.3
+python-dotenv==1.0.0
+
+# HTTP Client
+httpx==0.27.2
+
+# Local AI Models
+ollama>=0.1.0
+
+# Google OAuth Authentication & Calendar API
+google-auth==2.23.0
+google-auth-oauthlib==1.2.0
+google-auth-httplib2==0.2.0
+google-api-python-client==2.108.0
+
+# Natural Language Date/Time Parsing
+dateparser==1.2.0
+python-dateutil==2.8.2
+
+# Frontend dependencies are handled by npm-install.js
+pywebview==5.1
+
+# Desktop Pet Dependencies
+PyQt6==6.6.1
+PyQt6-WebEngine==6.6.0

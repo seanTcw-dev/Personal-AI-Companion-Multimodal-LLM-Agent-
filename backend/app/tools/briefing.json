@@ -1,0 +1,25 @@
+{
+    "name": "briefing",
+    "description": "Tool for generating a daily briefing summary from emails and news. Use this when the user asks for a 'briefing', 'summary', 'news', or 'updates'.",
+    "tools": [
+        {
+            "name": "generate_briefing",
+            "description": "Generate a daily briefing summary. Use this whenever the user asks for a briefing, news, or updates.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "focus": {
+                        "type": "string",
+                        "description": "Optional focus area (e.g., 'news', 'emails', 'all'). Default is 'all'.",
+                        "enum": [
+                            "news",
+                            "emails",
+                            "all"
+                        ]
+                    }
+                },
+                "required": []
+            }
+        }
+    ]
+}

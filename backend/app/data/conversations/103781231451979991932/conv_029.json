@@ -1,0 +1,19 @@
+{
+  "id": "conv_029",
+  "user_id": "103781231451979991932",
+  "title": "tmr 10pm i have a annual dinner",
+  "created_at": "2026-02-18T01:37:16.629740",
+  "updated_at": "2026-02-18T01:37:26.730167",
+  "messages": [
+    {
+      "role": "user",
+      "content": "tmr 10pm i have a annual dinner",
+      "timestamp": "2026-02-18T01:37:16.631740"
+    },
+    {
+      "role": "assistant",
+      "content": "The Annual Dinner is confirmed for tomorrow at 10pm. Shall I assist with planning or make any reservations?",
+      "timestamp": "2026-02-18T01:37:26.730167"
+    }
+  ]
+}

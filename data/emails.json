@@ -1,0 +1,134 @@
+[
+  {
+    "id": "9f71cb78-6c96-4ed5-b8fc-38190dc0873a",
+    "sender_name": "Team Lead",
+    "sender_email": "lead@company.com",
+    "subject": "New Task Assigned: API Integration",
+    "body": "A new task has been assigned to you in Jira: 'Integrate Payment Gateway API'.\n\nPriority: High\nDue Date: Tomorrow\n\nPlease check the dashboard for details.",
+    "category": "Task",
+    "timestamp": "2026-02-17T22:16:49.000646",
+    "read": false,
+    "important": true
+  },
+  {
+    "id": "942f9267-7447-4c44-b724-3f4cf43d0f49",
+    "sender_name": "Team Lead",
+    "sender_email": "lead@company.com",
+    "subject": "Feedback on Design Mockups",
+    "body": "I've reviewed the latest UI mockups. The color scheme looks great, but the navigation flow feels a bit clunky on mobile.\n\nCan we discuss this afternoon?",
+    "category": "Work",
+    "timestamp": "2026-02-17T22:16:49.001212",
+    "read": false,
+    "important": false
+  },
+  {
+    "id": "6fba1228-6e7f-4444-8321-69760acddafd",
+    "sender_name": "IT Support",
+    "sender_email": "support@company.com",
+    "subject": "Meeting: Sprint Planning scheduled for 10:00 AM",
+    "body": "Team,\n\nJust a reminder that we have our sprint planning session at 10:00 AM in Conference Room B (and via Zoom).\n\nPlease review the backlog beforehand.\n\nBest,\nTeam Lead",
+    "category": "Work",
+    "timestamp": "2026-02-17T22:16:49.001212",
+    "read": false,
+    "important": true
+  },
+  {
+    "id": "8a5e78cd-97bf-4efa-9f63-258976feba54",
+    "sender_name": "Project Manager",
+    "sender_email": "pm@company.com",
+    "subject": "Lunch & Learn: AI Ethics",
+    "body": "Join us this Friday at 12 PM for a Lunch & Learn session on 'The Ethics of AI in 2026'.\n\nPizza will be provided!\n\nRSVP by Thursday.",
+    "category": "Events",
+    "timestamp": "2026-02-17T22:16:53.267832",
+    "read": false,
+    "important": false
+  },
+  {
+    "id": "6e7833f0-9338-4eb7-80a0-03deb2e00f5e",
+    "sender_name": "System Monitor",
+    "sender_email": "alerts@internal-sys.net",
+    "subject": "Client Meeting Rescheduled",
+    "body": "The meeting with Arasaka Corp has been moved to 3 PM due to a conflict.\n\nUpdated calendar invite attached.",
+    "category": "Work",
+    "timestamp": "2026-02-17T22:16:53.267832",
+    "read": false,
+    "important": false
+  },
+  {
+    "id": "e193249f-2a5c-4d0b-8b7d-b39f14a951a2",
+    "sender_name": "Client: Arasaka Corp",
+    "sender_email": "contact@arasaka.com",
+    "subject": "Server Alert: High Latency Detected",
+    "body": "Warning: High latency detected on the Asia-Pacific region load balancer.\n\nResponse time > 500ms.\n\nPlease investigate immediately.",
+    "category": "System",
+    "timestamp": "2026-02-17T22:16:53.269343",
+    "read": false,
+    "important": false
+  },
+  {
+    "id": "dc230799-2d27-4c24-9cc1-2800a38ba969",
+    "sender_name": "Team Lead",
+    "sender_email": "lead@company.com",
+    "subject": "Feedback on Design Mockups",
+    "body": "I've reviewed the latest UI mockups. The color scheme looks great, but the navigation flow feels a bit clunky on mobile.\n\nCan we discuss this afternoon?",
+    "category": "Work",
+    "timestamp": "2026-02-17T22:16:55.956460",
+    "read": false,
+    "important": false
+  },
+  {
+    "id": "fd5835cd-7574-49f5-a6b3-6c9f83b0a683",
+    "sender_name": "IT Support",
+    "sender_email": "support@company.com",
+    "subject": "Meeting: Sprint Planning scheduled for 10:00 AM",
+    "body": "Team,\n\nJust a reminder that we have our sprint planning session at 10:00 AM in Conference Room B (and via Zoom).\n\nPlease review the backlog beforehand.\n\nBest,\nTeam Lead",
+    "category": "Work",
+    "timestamp": "2026-02-17T22:16:55.956460",
+    "read": false,
+    "important": false
+  },
+  {
+    "id": "de539ea7-f358-459b-9dbb-e5ea23eb465f",
+    "sender_name": "Client: Arasaka Corp",
+    "sender_email": "contact@arasaka.com",
+    "subject": "Action Required: Complete Security Training",
+    "body": "Dear Employee,\n\nThis is a reminder to complete your mandatory cybersecurity awareness training by Friday.\n\nFailure to complete this may result in account suspension.\n\nRegards,\nHR",
+    "category": "Admin",
+    "timestamp": "2026-02-17T22:16:55.956460",
+    "read": false,
+    "important": false
+  },
+  {
+    "id": "b0c5231e-14f1-4cc8-b5a9-860ab9897b47",
+    "sender_name": "IT Support",
+    "sender_email": "support@company.com",
+    "subject": "Urgent: Q4 Report Revision",
+    "body": "Hi,\n\nThe client requested some changes to the financial section of the Q4 report. We need this updated before the 2 PM meeting.\n\nPlease prioritize this.\n\nThanks,\nPM",
+    "category": "Work",
+    "timestamp": "2026-02-17T22:16:57.343145",
+    "read": false,
+    "important": true
+  },
+  {
+    "id": "4928493b-e30d-4936-b294-4aebfe22f1a5",
+    "sender_name": "Client: Arasaka Corp",
+    "sender_email": "contact@arasaka.com",
+    "subject": "Lunch & Learn: AI Ethics",
+    "body": "Join us this Friday at 12 PM for a Lunch & Learn session on 'The Ethics of AI in 2026'.\n\nPizza will be provided!\n\nRSVP by Thursday.",
+    "category": "Events",
+    "timestamp": "2026-02-17T22:16:57.344148",
+    "read": false,
+    "important": false
+  },
+  {
+    "id": "9c259fd5-7697-45c6-ac14-c6ff22f29809",
+    "sender_name": "HR Department",
+    "sender_email": "hr@company.com",
+    "subject": "Meeting: Sprint Planning scheduled for 10:00 AM",
+    "body": "Team,\n\nJust a reminder that we have our sprint planning session at 10:00 AM in Conference Room B (and via Zoom).\n\nPlease review the backlog beforehand.\n\nBest,\nTeam Lead",
+    "category": "Work",
+    "timestamp": "2026-02-17T22:16:57.344148",
+    "read": false,
+    "important": false
+  }
+]

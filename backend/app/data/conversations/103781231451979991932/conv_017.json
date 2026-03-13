@@ -1,0 +1,19 @@
+{
+  "id": "conv_017",
+  "user_id": "103781231451979991932",
+  "title": "Current Time Available Now",
+  "created_at": "2026-02-18T01:09:26.158965",
+  "updated_at": "2026-02-18T01:09:52.758544",
+  "messages": [
+    {
+      "role": "user",
+      "content": "wat time is now ?",
+      "timestamp": "2026-02-18T01:09:45.090683"
+    },
+    {
+      "role": "assistant",
+      "content": "The current time is 01:10:00.",
+      "timestamp": "2026-02-18T01:09:52.758544"
+    }
+  ]
+}

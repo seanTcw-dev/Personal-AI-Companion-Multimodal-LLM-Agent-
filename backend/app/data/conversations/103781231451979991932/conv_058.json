@@ -1,0 +1,19 @@
+{
+  "id": "conv_058",
+  "user_id": "103781231451979991932",
+  "title": "Annual Dinner Tonight at 8pm",
+  "created_at": "2026-02-25T17:18:08.362170",
+  "updated_at": "2026-02-25T17:19:17.087649",
+  "messages": [
+    {
+      "role": "user",
+      "content": "tmr 8pm i got a annual dinner",
+      "timestamp": "2026-02-25T17:19:09.839803"
+    },
+    {
+      "role": "assistant",
+      "content": "Confirmed, annual dinner at 8pm tomorrow. Shall I prepare a list of guests and topics for discussion?",
+      "timestamp": "2026-02-25T17:19:17.087649"
+    }
+  ]
+}

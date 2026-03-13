@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "C:\Users\SeanTeng\Desktop\Anime Model Chatbot\backend\test_import.py", line 5, in <module>
+    from app.main import app
+  File "C:\Users\SeanTeng\Desktop\Anime Model Chatbot\backend\app\main.py", line 3, in <module>
+    from app.api.websockets import websocket_endpoint
+  File "C:\Users\SeanTeng\Desktop\Anime Model Chatbot\backend\app\api\websockets.py", line 4, in <module>
+    from app.services.ollama_service import ollama_service
+  File "C:\Users\SeanTeng\Desktop\Anime Model Chatbot\backend\app\services\ollama_service.py", line 213, in <module>
+    ollama_service = OllamaService()
+                     ^^^^^^^^^^^^^^^
+  File "C:\Users\SeanTeng\Desktop\Anime Model Chatbot\backend\app\services\ollama_service.py", line 30, in __init__
+    print(f"\U0001f916 Using Ollama model: {self.model_name}")
+UnicodeEncodeError: 'gbk' codec can't encode character '\U0001f916' in position 0: illegal multibyte sequence
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\SeanTeng\Desktop\Anime Model Chatbot\backend\test_import.py", line 8, in <module>
+    print("\u274c Error importing app:")
+UnicodeEncodeError: 'gbk' codec can't encode character '\u274c' in position 0: illegal multibyte sequence

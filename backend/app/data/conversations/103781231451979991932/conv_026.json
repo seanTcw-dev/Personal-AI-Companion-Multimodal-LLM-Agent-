@@ -1,0 +1,19 @@
+{
+  "id": "conv_026",
+  "user_id": "103781231451979991932",
+  "title": "Dinner Meeting at 8pm Tonight",
+  "created_at": "2026-02-18T01:29:14.512351",
+  "updated_at": "2026-02-18T01:29:50.253719",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi trm 8pm i have adinner meeting",
+      "timestamp": "2026-02-18T01:29:40.240831"
+    },
+    {
+      "role": "assistant",
+      "content": "The dinner meeting is now scheduled for 8 PM, Master. Shall I prepare a transportation arrangement for you?",
+      "timestamp": "2026-02-18T01:29:50.253719"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "conv_005",
+  "user_id": "103781231451979991932",
+  "title": "hi suzune ,tmr 9am i have a lenovo meeting",
+  "created_at": "2026-02-18T00:46:11.710524",
+  "updated_at": "2026-02-18T00:46:11.713541",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi suzune ,tmr 9am i have a lenovo meeting",
+      "timestamp": "2026-02-18T00:46:11.713541"
+    }
+  ]
+}

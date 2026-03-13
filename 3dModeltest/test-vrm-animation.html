@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>VRM Animation Test - Mixamo FBX</title>
+    <style>
+        body {
+            margin: 0;
+            background: #1a1a2e;
+            color: #eee;
+            font-family: monospace;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            max-width: 300px;
+        }
+
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background: #357abd;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        <h3>🧪 VRM Animation Test</h3>
+        <div id="status">Loading...</div>
+        <button id="loadIdleBtn" disabled>Load Idle Animation</button>
+        <button id="loadWaveBtn" disabled>Load Wave Animation</button>
+        <div id="debug" style="margin-top: 10px; font-size: 12px;"></div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/",
+            "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@2.1.3/lib/three-vrm.module.js",
+            "@pixiv/three-vrm-animation": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm-animation@3.4.4/lib/three-vrm-animation.module.js"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
+        import { createVRMAnimationClip, VRMAnimationLoaderPlugin } from '@pixiv/three-vrm-animation';
+
+        // Setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1a1a2e);
+
+        const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 20);
+        camera.position.set(0, 1.4, 2.5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, 1, 0);
+        controls.update();
+
+        // Lights
+        const light = new THREE.DirectionalLight(0xffffff, Math.PI);
+        light.position.set(1, 1, 1);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+        // Grid
+        const gridHelper = new THREE.GridHelper(10, 10);
+        scene.add(gridHelper);
+
+        // State
+        let vrm = null;
+        let mixer = null;
+        let currentAction = null;
+        const clock = new THREE.Clock();
+
+        const statusEl = document.getElementById('status');
+        const debugEl = document.getElementById('debug');
+        const loadIdleBtn = document.getElementById('loadIdleBtn');
+        const loadWaveBtn = document.getElementById('loadWaveBtn');
+
+        function updateStatus(msg) {
+            statusEl.textContent = msg;
+            console.log('📢', msg);
+        }
+
+        function addDebug(msg) {
+            debugEl.innerHTML += `<div>${msg}</div>`;
+            console.log('🔍', msg);
+        }
+
+        // Load VRM Model
+        updateStatus('Loading VRM model...');
+        const loader = new GLTFLoader();
+        loader.register((parser) => new VRMLoaderPlugin(parser));
+
+        loader.load(
+            'avatar.vrm',
+            (gltf) => {
+                vrm = gltf.userData.vrm;
+
+                VRMUtils.removeUnnecessaryVertices(gltf.scene);
+                VRMUtils.rotateVRM0(vrm);
+
+                vrm.scene.traverse((obj) => {
+                    obj.frustumCulled = false;
+                });
+
+                scene.add(vrm.scene);
+                mixer = new THREE.AnimationMixer(vrm.scene);
+
+                updateStatus('✅ VRM loaded! Ready to test animations.');
+                loadIdleBtn.disabled = false;
+                loadWaveBtn.disabled = false;
+
+                addDebug(`VRM Humanoid bones: ${Object.keys(vrm.humanoid.humanBones).length}`);
+            },
+            (progress) => {
+                const percent = (progress.loaded / progress.total * 100).toFixed(1);
+                updateStatus(`Loading VRM: ${percent}%`);
+            },
+            (error) => {
+                updateStatus('❌ Error loading VRM');
+                console.error(error);
+            }
+        );
+
+        // Load Mixamo Animation - Direct Application (No Retargeting)
+        function loadMixamoAnimation(fbxPath, animName) {
+            if (!vrm || !mixer) {
+                addDebug('❌ VRM not loaded yet!');
+                return;
+            }
+
+            updateStatus(`Loading ${animName} animation...`);
+
+            // Try using GLTFLoader with VRMAnimationLoaderPlugin
+            const animLoader = new GLTFLoader();
+            animLoader.register((parser) => new VRMAnimationLoaderPlugin(parser));
+
+            // First, try loading as VRMA (if it's already converted)
+            const vrmaPath = fbxPath.replace('.fbx', '.vrma');
+
+            animLoader.load(
+                vrmaPath,
+                (gltf) => {
+                    addDebug(`✅ VRMA loaded: ${vrmaPath}`);
+
+                    if (!gltf.userData.vrmAnimations || gltf.userData.vrmAnimations.length === 0) {
+                        addDebug('❌ No VRM animations found!');
+                        // If VRMA fails, fall back to FBX loading and retargeting
+                        tryFBXDirect(fbxPath, animName);
+                        return;
+                    }
+
+                    const vrmAnim = gltf.userData.vrmAnimations[0];
+                    addDebug(`📊 VRM Animation: ${vrmAnim.name || 'unnamed'}`);
+
+                    // Stop current animation
+                    if (currentAction) {
+                        currentAction.stop();
+                    }
+
+                    // Play new animation
+                    currentAction = mixer.clipAction(vrmAnim);
+                    currentAction.setLoop(THREE.LoopRepeat);
+                    currentAction.play();
+
+                    updateStatus(`▶️ Playing ${animName}`);
+                    addDebug(`▶️ ${animName} animation playing!`);
+                },
+                (progress) => {
+                    const percent = (progress.loaded / progress.total * 100).toFixed(1);
+                    addDebug(`Loading VRMA: ${percent}%`);
+                },
+                (error) => {
+                    addDebug(`❌ VRMA load error: ${error.message}. Falling back to FBX.`);
+                    console.error(error);
+                    // If VRMA fails, fall back to FBX loading and retargeting
+                    tryFBXDirect(fbxPath, animName);
+                }
+            );
+        }
+
+        // Fallback function to load FBX and retarget if VRMA fails
+        function tryFBXDirect(fbxPath, animName) {
+            const fbxLoader = new FBXLoader();
+
+            fbxLoader.load(
+                fbxPath,
+                (fbx) => {
+                    addDebug(`✅ FBX loaded: ${fbxPath}`);
+
+                    if (!fbx.animations || fbx.animations.length === 0) {
+                        addDebug('❌ No animations in FBX!');
+                        return;
+                    }
+
+                    const fbxClip = fbx.animations[0];
+                    addDebug(`📊 FBX clip: ${fbxClip.name}, duration: ${fbxClip.duration.toFixed(2)}s`);
+                    addDebug(`📊 Tracks: ${fbxClip.tracks.length}`);
+
+                    // 🎯 KEY: Use createVRMAnimationClip to retarget Mixamo to VRM!
+                    try {
+                        const vrmClip = createVRMAnimationClip(fbxClip, vrm);
+                        addDebug(`✅ VRM clip created: ${vrmClip.tracks.length} tracks`);
+
+                        // Stop current animation
+                        if (currentAction) {
+                            currentAction.stop();
+                        }
+
+                        // Play new animation
+                        currentAction = mixer.clipAction(vrmClip);
+                        currentAction.setLoop(THREE.LoopRepeat);
+                        currentAction.play();
+
+                        updateStatus(`▶️ Playing ${animName}`);
+                        addDebug(`▶️ ${animName} animation playing!`);
+                    } catch (error) {
+                        addDebug(`❌ Retarget failed: ${error.message}`);
+                        console.error('Retarget error:', error);
+                    }
+                },
+                (progress) => {
+                    const percent = (progress.loaded / progress.total * 100).toFixed(1);
+                    addDebug(`Loading FBX: ${percent}%`);
+                },
+                (error) => {
+                    addDebug(`❌ FBX load error: ${error.message}`);
+                    console.error(error);
+                }
+            );
+        }
+
+        // Button handlers
+        loadIdleBtn.addEventListener('click', () => {
+            debugEl.innerHTML = '';
+            loadMixamoAnimation('idle.fbx', 'Idle');
+        });
+
+        loadWaveBtn.addEventListener('click', () => {
+            debugEl.innerHTML = '';
+            loadMixamoAnimation('AvatarSample_A@Waving.fbx', 'Waving');
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const deltaTime = clock.getDelta();
+
+            if (mixer) {
+                mixer.update(deltaTime);
+            }
+
+            if (vrm) {
+                vrm.update(deltaTime);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>

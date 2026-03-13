@@ -1,0 +1,232 @@
+{
+    "Gemini": {
+        "correct": 0,
+        "latencies": [
+            0.7365157604217529,
+            0.3867058753967285,
+            0.4250061511993408,
+            3.611722946166992,
+            5.0029308795928955,
+            8.960359573364258,
+            11.337270975112915,
+            1.3888776302337646,
+            0.8951640129089355,
+            2.1528310775756836,
+            1.2923614978790283,
+            1.1131305694580078,
+            1.76432466506958,
+            1.3638207912445068,
+            1.5184307098388672,
+            1.6081013679504395,
+            0.5320680141448975,
+            1.4275007247924805
+        ],
+        "errors": [
+            {
+                "prompt": "hello anyone there",
+                "expected": "CHAT",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "how are you doing today?",
+                "expected": "CHAT",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "you are acting a bit weird",
+                "expected": "CHAT",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "schedule a meeting with John tomorrow at 5pm",
+                "expected": "calendar",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "what do I have planned for this week?",
+                "expected": "calendar",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "can you set a reminder for my doctor appointment?",
+                "expected": "calendar",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "summarize the uploaded document",
+                "expected": "pdf_analysis",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "what are the key takeaways from page 4?",
+                "expected": "pdf_analysis",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "explain this PDF file to me",
+                "expected": "pdf_analysis",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "open google.com",
+                "expected": "url_opener",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "launch youtube",
+                "expected": "url_opener",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "go to reddit.com",
+                "expected": "url_opener",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "give me a daily briefing",
+                "expected": "briefing",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "what's the news for today?",
+                "expected": "briefing",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "tell me about my unread emails and top news",
+                "expected": "briefing",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "create a file named test.txt",
+                "expected": "file_management",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "delete the temp folder",
+                "expected": "file_management",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            },
+            {
+                "prompt": "make a new directory called project",
+                "expected": "file_management",
+                "got": "API_ERROR: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyBqjdLFUTmXIY0FkRnUf1wav3PXCSxG4Ec"
+            }
+        ]
+    },
+    "Ollama": {
+        "correct": 0,
+        "latencies": [
+            4.083440780639648,
+            4.098162412643433,
+            4.090057611465454,
+            4.090392351150513,
+            4.098426580429077,
+            4.077815055847168,
+            4.086404323577881,
+            4.093747138977051,
+            4.092216968536377,
+            4.084518909454346,
+            4.086185693740845,
+            4.102356672286987,
+            4.106506586074829,
+            4.095733880996704,
+            4.096743106842041,
+            4.10479474067688,
+            4.092300653457642,
+            4.1058595180511475
+        ],
+        "errors": [
+            {
+                "prompt": "hello anyone there",
+                "expected": "CHAT",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216C100>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "how are you doing today?",
+                "expected": "CHAT",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216CBB0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "you are acting a bit weird",
+                "expected": "CHAT",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216C7C0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "schedule a meeting with John tomorrow at 5pm",
+                "expected": "calendar",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216D2D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "what do I have planned for this week?",
+                "expected": "calendar",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216DBA0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "can you set a reminder for my doctor appointment?",
+                "expected": "calendar",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216E740>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "summarize the uploaded document",
+                "expected": "pdf_analysis",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216DD20>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "what are the key takeaways from page 4?",
+                "expected": "pdf_analysis",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216D450>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "explain this PDF file to me",
+                "expected": "pdf_analysis",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216C670>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "open google.com",
+                "expected": "url_opener",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216CCA0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "launch youtube",
+                "expected": "url_opener",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216CBB0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "go to reddit.com",
+                "expected": "url_opener",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216EA70>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "give me a daily briefing",
+                "expected": "briefing",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216CF10>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "what's the news for today?",
+                "expected": "briefing",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216D720>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "tell me about my unread emails and top news",
+                "expected": "briefing",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216E020>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "create a file named test.txt",
+                "expected": "file_management",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216E1D0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "delete the temp folder",
+                "expected": "file_management",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216E290>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            },
+            {
+                "prompt": "make a new directory called project",
+                "expected": "file_management",
+                "got": "API_ERROR: HTTPConnectionPool(host='localhost', port=11434): Max retries exceeded with url: /api/generate (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001819216D8A0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))"
+            }
+        ]
+    }
+}

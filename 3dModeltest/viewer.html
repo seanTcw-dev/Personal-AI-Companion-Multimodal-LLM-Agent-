@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VRM Model Viewer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0E101B 0%, #1a1f35 100%);
+      color: #E8EDFF;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(14, 16, 27, 0.95);
+      color: #00F6FF;
+      font-size: 1.5rem;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .loading-overlay.hidden {
+      display: none;
+    }
+
+    .loading-text {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px 50px;
+      border: 2px solid #00F6FF;
+      box-shadow: 0 0 30px rgba(0, 246, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 246, 255, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(0, 246, 255, 0.8);
+      }
+    }
+
+    .controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(14, 16, 27, 0.9);
+      border: 1px solid rgba(0, 246, 255, 0.3);
+      padding: 20px;
+      border-radius: 8px;
+      z-index: 10;
+      min-width: 250px;
+      box-shadow: 0 0 20px rgba(0, 246, 255, 0.3);
+    }
+
+    .controls h3 {
+      margin: 0 0 15px 0;
+      color: #00F6FF;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    .control-group label {
+      display: block;
+      color: #9FADC6;
+      font-size: 0.85rem;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .control-group select,
+    .control-group input[type="range"] {
+      width: 100%;
+      padding: 8px;
+      background: rgba(10, 12, 22, 0.8);
+      border: 1px solid rgba(0, 246, 255, 0.3);
+      color: #00F6FF;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .control-group input[type="range"] {
+      padding: 0;
+      height: 6px;
+      cursor: pointer;
+    }
+
+    .value-display {
+      text-align: center;
+      color: #00F6FF;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      font-weight: 600;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #00F6FF, #7B2DFF);
+      border: none;
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      box-shadow: 0 0 20px rgba(0, 246, 255, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(14, 16, 27, 0.9);
+      border: 1px solid rgba(0, 246, 255, 0.3);
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #9FADC6;
+      max-width: 300px;
+    }
+
+    .info strong {
+      color: #00F6FF;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="canvas3d"></canvas>
+  </div>
+
+  <div id="loading" class="loading-overlay">
+    <div class="loading-text">LOADING VRM MODEL...</div>
+  </div>
+
+  <div class="controls">
+    <h3>🎭 Expression Controls</h3>
+    <div class="control-group">
+      <label>Expression:</label>
+      <select id="expressionSelect">
+        <option value="">Select Expression...</option>
+        <option value="neutral">Neutral</option>
+        <option value="happy">Happy</option>
+        <option value="sad">Sad</option>
+        <option value="angry">Angry</option>
+        <option value="surprised">Surprised</option>
+        <option value="relaxed">Relaxed</option>
+        <option value="joy">Joy</option>
+        <option value="sorrow">Sorrow</option>
+        <option value="fun">Fun</option>
+        <option value="blink">Blink</option>
+        <option value="blinkLeft">Blink Left</option>
+        <option value="blinkRight">Blink Right</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>Intensity:</label>
+      <input type="range" id="expressionSlider" min="0" max="1" step="0.01" value="1" disabled>
+      <div class="value-display" id="expressionValue">1.00</div>
+    </div>
+
+    <button onclick="resetExpression()">Reset Expression</button>
+  </div>
+
+  <div class="info">
+    <strong>Controls:</strong><br>
+    • Mouse drag to rotate<br>
+    • Scroll to zoom<br>
+    • Select expression from dropdown<br>
+    • Adjust intensity with slider
+  </div>
+
+  <!-- Import Three.js and VRM -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+        "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@2.1.0/lib/three-vrm.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    let scene, camera, renderer, clock, controls;
+    let vrm = null;
+    let mixer = null;
+
+    // Initialize Three.js scene
+    function init() {
+      const canvas = document.getElementById('canvas3d');
+      const container = document.getElementById('canvas-container');
+
+      // Create scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0E101B);
+
+      // Create camera
+      camera = new THREE.PerspectiveCamera(
+        30,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        20
+      );
+      camera.position.set(0, 3.0, 6.5);
+      camera.lookAt(0, 1.2, 0);
+
+      // Create renderer
+      renderer = new THREE.WebGLRenderer({ 
+        canvas,
+        antialias: true 
+      });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+
+      // Add OrbitControls for mouse interaction
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.target.set(0, 1.2, 0);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.minDistance = 2;
+      controls.maxDistance = 10;
+
+      // Three-point lighting setup (matching your frontend)
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+      keyLight.position.set(1, 1.5, 2);
+      scene.add(keyLight);
+
+      const fillLight = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(fillLight);
+
+      const rimLight = new THREE.DirectionalLight(0x88aaff, 0.6);
+      rimLight.position.set(-0.5, 1.5, -1.5);
+      scene.add(rimLight);
+
+      const frontLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      frontLight.position.set(0, 1.2, 3);
+      scene.add(frontLight);
+
+      // Create clock
+      clock = new THREE.Clock();
+
+      // Load VRM model
+      loadVRMModel();
+
+      // Handle window resize
+      window.addEventListener('resize', onWindowResize);
+
+      // Start animation loop
+      animate();
+    }
+
+    // Load VRM model
+    function loadVRMModel() {
+      const loading = document.getElementById('loading');
+      loading.classList.remove('hidden');
+
+      const loader = new GLTFLoader();
+      loader.register((parser) => new VRMLoaderPlugin(parser));
+
+      console.log('🔍 Loading VRM model from: avatar.vrm');
+
+      loader.load(
+        'avatar.vrm',
+        (gltf) => {
+          vrm = gltf.userData.vrm;
+
+          if (!vrm) {
+            console.error('❌ VRM model not found in GLTF');
+            loading.classList.add('hidden');
+            return;
+          }
+
+          console.log('✅ VRM model loaded successfully:', vrm);
+
+          // Create wrapper group (matching your frontend approach)
+          const characterWrapper = new THREE.Group();
+          characterWrapper.name = 'characterWrapper';
+          characterWrapper.add(vrm.scene);
+          scene.add(characterWrapper);
+
+          // Apply transformations (matching your frontend)
+          characterWrapper.scale.set(2.1, 2.1, 2.1);
+          characterWrapper.position.y = -0.6;
+
+          console.log('📦 Character wrapper - Scale:', characterWrapper.scale.x, 'Position Y:', characterWrapper.position.y);
+
+          // Setup animation mixer
+          mixer = new THREE.AnimationMixer(vrm.scene);
+
+          // Rotate VRM to face camera
+          VRMUtils.rotateVRM0(vrm);
+
+          // Fix T-pose by relaxing arms
+          if (vrm.humanoid) {
+            const leftUpperArm = vrm.humanoid.getRawBoneNode('leftUpperArm');
+            const rightUpperArm = vrm.humanoid.getRawBoneNode('rightUpperArm');
+            const leftLowerArm = vrm.humanoid.getRawBoneNode('leftLowerArm');
+            const rightLowerArm = vrm.humanoid.getRawBoneNode('rightLowerArm');
+
+            if (leftUpperArm) leftUpperArm.rotation.z = 0.8;
+            if (rightUpperArm) rightUpperArm.rotation.z = -0.8;
+            if (leftLowerArm) leftLowerArm.rotation.z = 0.3;
+            if (rightLowerArm) rightLowerArm.rotation.z = -0.3;
+
+            console.log('🦾 Arms relaxed from T-pose');
+          }
+
+          // Set default expression
+          setExpression('neutral', 1.0);
+
+          loading.classList.add('hidden');
+          console.log('✅ Model ready!');
+        },
+        (progress) => {
+          const percent = (progress.loaded / progress.total) * 100;
+          console.log(`📥 Loading: ${percent.toFixed(1)}%`);
+        },
+        (error) => {
+          console.error('❌ Error loading VRM:', error);
+          loading.classList.add('hidden');
+          alert('Failed to load VRM model. Make sure avatar.vrm is in the same folder.');
+        }
+      );
+    }
+
+    // Set expression
+    function setExpression(name, weight = 1.0) {
+      if (!vrm || !vrm.expressionManager) {
+        console.warn('⚠️ Expression manager not available');
+        return;
+      }
+
+      try {
+        // Reset all expressions first
+        const expressions = [
+          'happy', 'sad', 'angry', 'surprised', 'neutral', 'relaxed',
+          'joy', 'sorrow', 'fun', 'blink', 'blinkLeft', 'blinkRight'
+        ];
+        
+        expressions.forEach(exp => {
+          try {
+            vrm.expressionManager.setValue(exp, 0);
+          } catch (e) {
+            // Expression might not exist
+          }
+        });
+
+        // Set requested expression
+        vrm.expressionManager.setValue(name, weight);
+        console.log(`😊 Expression set: ${name} = ${weight.toFixed(2)}`);
+      } catch (error) {
+        console.warn(`⚠️ Failed to set expression '${name}':`, error);
+      }
+    }
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const delta = clock.getDelta();
+
+      // Update controls
+      controls.update();
+
+      // Update VRM
+      if (vrm) {
+        vrm.update(delta);
+      }
+
+      // Update mixer
+      if (mixer) {
+        mixer.update(delta);
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    // Handle window resize
+    function onWindowResize() {
+      const container = document.getElementById('canvas-container');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    // Expression controls
+    const expressionSelect = document.getElementById('expressionSelect');
+    const expressionSlider = document.getElementById('expressionSlider');
+    const expressionValue = document.getElementById('expressionValue');
+
+    expressionSelect.addEventListener('change', (e) => {
+      if (e.target.value) {
+        expressionSlider.disabled = false;
+        const weight = parseFloat(expressionSlider.value);
+        setExpression(e.target.value, weight);
+      } else {
+        expressionSlider.disabled = true;
+      }
+    });
+
+    expressionSlider.addEventListener('input', (e) => {
+      const expression = expressionSelect.value;
+      const weight = parseFloat(e.target.value);
+      expressionValue.textContent = weight.toFixed(2);
+      
+      if (expression) {
+        setExpression(expression, weight);
+      }
+    });
+
+    window.resetExpression = function() {
+      expressionSelect.value = 'neutral';
+      expressionSlider.value = 1;
+      expressionValue.textContent = '1.00';
+      expressionSlider.disabled = false;
+      setExpression('neutral', 1.0);
+      console.log('🔄 Reset to neutral');
+    };
+
+    // Start the app
+    init();
+  </script>
+</body>
+</html>

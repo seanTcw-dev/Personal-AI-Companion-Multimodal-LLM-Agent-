@@ -1,0 +1,26 @@
+{
+    "name": "url_opener",
+    "description": "Tool for opening websites and URLs in the browser. Use this when the user wants to open, visit, or navigate to a website (e.g., 'open YouTube', 'go to Google', 'visit GitHub').",
+    "tools": [
+        {
+            "name": "open_url",
+            "description": "Opens a URL or website in the default browser. Supports both full URLs (https://...) and common website shortcuts (youtube, google, gmail, etc.).",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "description": "The URL to open. Can be a full URL (e.g., 'https://youtube.com') or a shortcut name (e.g., 'youtube', 'google', 'gmail', 'github', 'twitter', 'facebook', 'reddit', 'netflix', 'spotify')."
+                    },
+                    "query": {
+                        "type": "string",
+                        "description": "Optional search query. If provided, will search on the specified website (e.g., url='youtube', query='cat videos')."
+                    }
+                },
+                "required": [
+                    "url"
+                ]
+            }
+        }
+    ]
+}

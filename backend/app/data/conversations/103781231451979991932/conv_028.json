@@ -1,0 +1,29 @@
+{
+  "id": "conv_028",
+  "user_id": "103781231451979991932",
+  "title": "Dinner Meeting Tomorrow Evening",
+  "created_at": "2026-02-18T01:30:58.770022",
+  "updated_at": "2026-02-18T01:34:35.842637",
+  "messages": [
+    {
+      "role": "user",
+      "content": "tmr 9pm i have a dinner meeting",
+      "timestamp": "2026-02-18T01:31:21.903273"
+    },
+    {
+      "role": "assistant",
+      "content": "Your dinner meeting has been scheduled for tomorrow at 9pm local time, confirmed.",
+      "timestamp": "2026-02-18T01:31:30.595131"
+    },
+    {
+      "role": "user",
+      "content": "tmr 10pm i have a dinner meeting",
+      "timestamp": "2026-02-18T01:34:28.391419"
+    },
+    {
+      "role": "assistant",
+      "content": "Your dinner meeting has been scheduled for tomorrow at 10pm local time, confirmed.",
+      "timestamp": "2026-02-18T01:34:35.842637"
+    }
+  ]
+}

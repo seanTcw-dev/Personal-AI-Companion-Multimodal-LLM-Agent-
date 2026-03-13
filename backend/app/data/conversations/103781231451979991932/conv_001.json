@@ -1,0 +1,29 @@
+{
+  "id": "conv_001",
+  "user_id": "103781231451979991932",
+  "title": "hi suzune",
+  "created_at": "2026-02-17T22:10:38.989241",
+  "updated_at": "2026-02-17T22:19:30.114128",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi suzune",
+      "timestamp": "2026-02-17T22:10:38.994377"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello. How can I assist you today?",
+      "timestamp": "2026-02-17T22:10:38.996452"
+    },
+    {
+      "role": "user",
+      "content": "hi suzune ",
+      "timestamp": "2026-02-17T22:19:30.111518"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello. How can I assist you today?",
+      "timestamp": "2026-02-17T22:19:30.114128"
+    }
+  ]
+}

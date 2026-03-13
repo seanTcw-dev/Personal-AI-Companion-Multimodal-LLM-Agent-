@@ -1,0 +1,64 @@
+{
+    "name": "file_management",
+    "description": "Tools for creating, reading, and editing text files in the user's sandbox directory.",
+    "tools": [
+        {
+            "name": "create_file",
+            "description": "Create a new text file with specified content.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "filename": {
+                        "type": "string",
+                        "description": "Name of the file (e.g., 'notes.txt'). Must check if file exists first unless overwriting."
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "The initial content to write to the file."
+                    }
+                },
+                "required": [
+                    "filename",
+                    "content"
+                ]
+            }
+        },
+        {
+            "name": "read_file",
+            "description": "Read the content of an existing file.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "filename": {
+                        "type": "string",
+                        "description": "Name of the file to read."
+                    }
+                },
+                "required": [
+                    "filename"
+                ]
+            }
+        },
+        {
+            "name": "edit_file",
+            "description": "Append content to the end of an existing file.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "filename": {
+                        "type": "string",
+                        "description": "Name of the file to edit."
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "Text to append to the file."
+                    }
+                },
+                "required": [
+                    "filename",
+                    "content"
+                ]
+            }
+        }
+    ]
+}

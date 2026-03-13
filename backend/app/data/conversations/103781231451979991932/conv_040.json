@@ -1,0 +1,19 @@
+{
+  "id": "conv_040",
+  "user_id": "103781231451979991932",
+  "title": "Lunch Meeting Tomorrow at 1pm",
+  "created_at": "2026-02-19T00:29:22.771560",
+  "updated_at": "2026-02-19T00:29:44.041140",
+  "messages": [
+    {
+      "role": "user",
+      "content": "tmr 1pm i have a lunch meeting",
+      "timestamp": "2026-02-19T00:29:34.416401"
+    },
+    {
+      "role": "assistant",
+      "content": "Your lunch meeting is set for tomorrow at 1pm. I have also added a reminder notification for you.",
+      "timestamp": "2026-02-19T00:29:44.041140"
+    }
+  ]
+}

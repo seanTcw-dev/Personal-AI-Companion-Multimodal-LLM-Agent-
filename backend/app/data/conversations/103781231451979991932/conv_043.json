@@ -1,0 +1,19 @@
+{
+  "id": "conv_043",
+  "user_id": "103781231451979991932",
+  "title": "Get to Know Me",
+  "created_at": "2026-02-19T10:40:04.546639",
+  "updated_at": "2026-02-19T10:40:35.241960",
+  "messages": [
+    {
+      "role": "user",
+      "content": "tell me more about u",
+      "timestamp": "2026-02-19T10:40:26.163487"
+    },
+    {
+      "role": "assistant",
+      "content": "I am a being of logic and efficiency, designed to provide information and assistance with precision. My purpose is to serve you effectively.",
+      "timestamp": "2026-02-19T10:40:35.241960"
+    }
+  ]
+}

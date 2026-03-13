@@ -1,0 +1,30 @@
+{
+    "name": "pdf_analysis",
+    "description": "Analyze and extract information from PDF documents located in the sandbox.",
+    "tools": [
+        {
+            "type": "function",
+            "function": {
+                "name": "analyze_pdf",
+                "description": "Reads a PDF file from the user_files directory and answers questions about it.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string",
+                            "description": "The name of the PDF file to analyze (e.g., 'report.pdf')."
+                        },
+                        "query": {
+                            "type": "string",
+                            "description": "The specific question or analysis request about the PDF content."
+                        }
+                    },
+                    "required": [
+                        "filename",
+                        "query"
+                    ]
+                }
+            }
+        }
+    ]
+}

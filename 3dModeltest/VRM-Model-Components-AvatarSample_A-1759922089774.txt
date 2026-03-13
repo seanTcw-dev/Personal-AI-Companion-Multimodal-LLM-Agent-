@@ -1,0 +1,99 @@
+═══════════════════════════════════════════════════════════
+           VRM MODEL COMPONENT ANALYSIS REPORT             
+═══════════════════════════════════════════════════════════
+
+📊 BASIC INFORMATION
+─────────────────────────────────────────────────────────
+Model Name:      AvatarSample_A
+Author:          Unknown
+VRM Version:     1
+Total Objects:   213
+Has Humanoid:    ✅ YES
+Has Expressions: ✅ YES
+
+😊 AVAILABLE EXPRESSIONS (22)
+─────────────────────────────────────────────────────────
+USE THESE IN YOUR CODE:
+
+  • happy           - vrm.expressionManager.setValue('happy', 1.0)
+  • angry           - vrm.expressionManager.setValue('angry', 1.0)
+  • sad             - vrm.expressionManager.setValue('sad', 1.0)
+  • relaxed         - vrm.expressionManager.setValue('relaxed', 1.0)
+  • surprised       - vrm.expressionManager.setValue('surprised', 1.0)
+  • neutral         - vrm.expressionManager.setValue('neutral', 1.0)
+  • joy             - vrm.expressionManager.setValue('joy', 1.0)
+  • sorrow          - vrm.expressionManager.setValue('sorrow', 1.0)
+  • fun             - vrm.expressionManager.setValue('fun', 1.0)
+  • blink           - vrm.expressionManager.setValue('blink', 1.0)
+  • blinkLeft       - vrm.expressionManager.setValue('blinkLeft', 1.0)
+  • blinkRight      - vrm.expressionManager.setValue('blinkRight', 1.0)
+  • lookUp          - vrm.expressionManager.setValue('lookUp', 1.0)
+  • lookDown        - vrm.expressionManager.setValue('lookDown', 1.0)
+  • lookLeft        - vrm.expressionManager.setValue('lookLeft', 1.0)
+  • lookRight       - vrm.expressionManager.setValue('lookRight', 1.0)
+  • aa              - vrm.expressionManager.setValue('aa', 1.0)
+  • ih              - vrm.expressionManager.setValue('ih', 1.0)
+  • ou              - vrm.expressionManager.setValue('ou', 1.0)
+  • ee              - vrm.expressionManager.setValue('ee', 1.0)
+  • oh              - vrm.expressionManager.setValue('oh', 1.0)
+  • extra           - vrm.expressionManager.setValue('extra', 1.0)
+
+🦴 AVAILABLE BONES (24)
+─────────────────────────────────────────────────────────
+  • hips                 - vrm.humanoid.getRawBoneNode('hips')
+  • spine                - vrm.humanoid.getRawBoneNode('spine')
+  • chest                - vrm.humanoid.getRawBoneNode('chest')
+  • upperChest           - vrm.humanoid.getRawBoneNode('upperChest')
+  • neck                 - vrm.humanoid.getRawBoneNode('neck')
+  • head                 - vrm.humanoid.getRawBoneNode('head')
+  • leftShoulder         - vrm.humanoid.getRawBoneNode('leftShoulder')
+  • leftUpperArm         - vrm.humanoid.getRawBoneNode('leftUpperArm')
+  • leftLowerArm         - vrm.humanoid.getRawBoneNode('leftLowerArm')
+  • leftHand             - vrm.humanoid.getRawBoneNode('leftHand')
+  • rightShoulder        - vrm.humanoid.getRawBoneNode('rightShoulder')
+  • rightUpperArm        - vrm.humanoid.getRawBoneNode('rightUpperArm')
+  • rightLowerArm        - vrm.humanoid.getRawBoneNode('rightLowerArm')
+  • rightHand            - vrm.humanoid.getRawBoneNode('rightHand')
+  • leftUpperLeg         - vrm.humanoid.getRawBoneNode('leftUpperLeg')
+  • leftLowerLeg         - vrm.humanoid.getRawBoneNode('leftLowerLeg')
+  • leftFoot             - vrm.humanoid.getRawBoneNode('leftFoot')
+  • leftToes             - vrm.humanoid.getRawBoneNode('leftToes')
+  • rightUpperLeg        - vrm.humanoid.getRawBoneNode('rightUpperLeg')
+  • rightLowerLeg        - vrm.humanoid.getRawBoneNode('rightLowerLeg')
+  • rightFoot            - vrm.humanoid.getRawBoneNode('rightFoot')
+  • rightToes            - vrm.humanoid.getRawBoneNode('rightToes')
+  • leftEye              - vrm.humanoid.getRawBoneNode('leftEye')
+  • rightEye             - vrm.humanoid.getRawBoneNode('rightEye')
+
+🎨 MATERIALS (20)
+─────────────────────────────────────────────────────────
+  • N00_000_00_FaceMouth_00_FACE (Instance) (ShaderMaterial)
+  • N00_000_00_EyeIris_00_EYE (Instance) (ShaderMaterial)
+  • N00_000_00_EyeHighlight_00_EYE (Instance) (ShaderMaterial)
+  • N00_000_00_Face_00_SKIN (Instance) (ShaderMaterial)
+  • N00_000_00_Face_00_SKIN (Instance) (Outline) (ShaderMaterial)
+  • N00_000_00_EyeWhite_00_EYE (Instance) (ShaderMaterial)
+  • N00_000_00_FaceBrow_00_FACE (Instance) (ShaderMaterial)
+  • N00_000_00_FaceEyeline_00_FACE (Instance) (ShaderMaterial)
+  • N00_000_00_Body_00_SKIN (Instance) (ShaderMaterial)
+  • N00_000_00_Body_00_SKIN (Instance) (Outline) (ShaderMaterial)
+  • N00_001_02_Bottoms_01_CLOTH (Instance) (ShaderMaterial)
+  • N00_001_02_Bottoms_01_CLOTH (Instance) (Outline) (ShaderMaterial)
+  • N00_001_01_Shoes_01_CLOTH (Instance) (ShaderMaterial)
+  • N00_001_01_Shoes_01_CLOTH (Instance) (Outline) (ShaderMaterial)
+  • N00_005_01_Tops_01_CLOTH (Instance) (ShaderMaterial)
+  • N00_005_01_Tops_01_CLOTH (Instance) (Outline) (ShaderMaterial)
+  • N00_000_Hair_00_HAIR_01 (Instance) (ShaderMaterial)
+  • N00_000_Hair_00_HAIR_02 (Instance) (ShaderMaterial)
+  • N00_000_Hair_00_HAIR_03 (Instance) (ShaderMaterial)
+  • N00_000_Hair_00_HAIR_04 (Instance) (ShaderMaterial)
+
+🔺 MESH COMPLEXITY
+─────────────────────────────────────────────────────────
+Total Meshes:    15
+Total Vertices:  94,016
+Total Faces:     29,542
+
+═══════════════════════════════════════════════════════════
+Generated: 10/8/2025, 7:14:49 PM
+═══════════════════════════════════════════════════════════

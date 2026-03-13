@@ -1,0 +1,14 @@
+{
+  "id": "conv_063",
+  "user_id": "103781231451979991932",
+  "title": "Tell me more about you",
+  "created_at": "2026-03-11T22:19:48.492704",
+  "updated_at": "2026-03-11T22:19:48.500210",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Tell me more about you",
+      "timestamp": "2026-03-11T22:19:48.500210"
+    }
+  ]
+}

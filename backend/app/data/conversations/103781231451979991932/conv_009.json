@@ -1,0 +1,19 @@
+{
+  "id": "conv_009",
+  "user_id": "103781231451979991932",
+  "title": "Simple Hello from Someone",
+  "created_at": "2026-02-18T00:57:23.122731",
+  "updated_at": "2026-02-18T01:40:59.239362",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi",
+      "timestamp": "2026-02-18T01:40:59.236776"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello. How can I assist you today?",
+      "timestamp": "2026-02-18T01:40:59.239362"
+    }
+  ]
+}

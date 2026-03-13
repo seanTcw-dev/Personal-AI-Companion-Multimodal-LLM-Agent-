@@ -1,0 +1,24 @@
+{
+  "id": "conv_036",
+  "user_id": "103781231451979991932",
+  "title": "Tell me more about you",
+  "created_at": "2026-02-18T23:32:45.639196",
+  "updated_at": "2026-02-19T00:14:45.770047",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Tell me more about you",
+      "timestamp": "2026-02-18T23:33:06.339682"
+    },
+    {
+      "role": "user",
+      "content": "hi suzune ,tmr 8pm i have a annual dinner",
+      "timestamp": "2026-02-19T00:14:33.007907"
+    },
+    {
+      "role": "assistant",
+      "content": "I have scheduled the annual dinner for tomorrow at 8 pm on your calendar. Is there any specific plan or arrangement you would like me to make?",
+      "timestamp": "2026-02-19T00:14:45.770047"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "conv_019",
+  "user_id": "103781231451979991932",
+  "title": "wat time is now ?",
+  "created_at": "2026-02-18T01:17:42.409961",
+  "updated_at": "2026-02-18T01:17:42.414086",
+  "messages": [
+    {
+      "role": "user",
+      "content": "wat time is now ?",
+      "timestamp": "2026-02-18T01:17:42.414086"
+    }
+  ]
+}

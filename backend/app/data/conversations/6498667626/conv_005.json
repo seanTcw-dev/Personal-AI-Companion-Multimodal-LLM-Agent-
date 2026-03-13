@@ -1,0 +1,14 @@
+{
+  "id": "conv_005",
+  "user_id": "6498667626",
+  "title": "tell me daily briefing",
+  "created_at": "2026-02-19T01:02:20.813676",
+  "updated_at": "2026-02-19T01:02:20.817742",
+  "messages": [
+    {
+      "role": "user",
+      "content": "tell me daily briefing",
+      "timestamp": "2026-02-19T01:02:20.816737"
+    }
+  ]
+}
