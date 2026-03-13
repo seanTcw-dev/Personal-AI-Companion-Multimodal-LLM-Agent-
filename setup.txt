@@ -1,5 +1,0 @@
-1.conda create --name test python=3.10.14
-2.conda activate name
-3.node npm-install.js
-4.pip install all-requirements.txt
-5.npm run dev

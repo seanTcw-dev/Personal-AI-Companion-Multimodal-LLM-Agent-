@@ -66,3 +66,15 @@ uploads/
 
 # Markdown docs
 *.md
+
+# Misc files (notes, zips, standalone scripts)
+*.zip
+3dresoruce.txt
+chapter 5.txt
+command run with configuration run.py.txt
+command to start.txt
+compile_docs.py
+gemini_error.txt
+llm_benchmark_results.json
+npm-install.js
+setup.txt
