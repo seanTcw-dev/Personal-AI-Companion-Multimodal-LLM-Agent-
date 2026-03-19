@@ -38,6 +38,8 @@ Desktop pet
 <img width="772" height="272" alt="image" src="https://github.com/user-attachments/assets/94f858cd-b752-464b-8cd8-143d82dcef86" />
 <img width="454" height="268" alt="image" src="https://github.com/user-attachments/assets/88f47287-7ffc-426c-bbc7-442dd31af8c3" />
 <img width="383" height="145" alt="image" src="https://github.com/user-attachments/assets/44fff517-8ae7-4ac2-aa10-ca5e164bc389" />
+Telegram interface
+![WhatsApp Image 2026-03-19 at 22 47 55](https://github.com/user-attachments/assets/2ac12be1-96f0-448f-920c-5ab6063b1625)
 
 
 ---
