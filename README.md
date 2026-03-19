@@ -21,6 +21,26 @@ A full-stack, privacy-first AI companion featuring a reactive 3D anime character
 | 🖥️ **Desktop Pet Mode** | Transparent floating window — the character walks across your desktop |
 
 ---
+## Screenshot
+Landing Page
+<img width="1905" height="977" alt="image" src="https://github.com/user-attachments/assets/34a39ba7-ab83-4681-bf73-e204bee24bf2" />
+Login Page
+<img width="1885" height="971" alt="image" src="https://github.com/user-attachments/assets/abc97a2f-3f64-4f37-8369-a609e5610aae" />
+Main Interface
+<img width="1897" height="950" alt="image" src="https://github.com/user-attachments/assets/ea3d5380-46cd-4eeb-aa0e-d1fddbfce872" />
+User Profile Setting Page
+<img width="1120" height="955" alt="image" src="https://github.com/user-attachments/assets/bb21e2ed-7fc0-43f4-81c3-85e8db7fdcb0" />
+Voice Setting Page
+<img width="580" height="783" alt="image" src="https://github.com/user-attachments/assets/cb9074c6-5f29-438a-b682-60f2b9bcde50" />
+Preview 3d model page
+<img width="1906" height="971" alt="image" src="https://github.com/user-attachments/assets/2c4e7e97-43d8-47e3-936a-9021e88549ff" />
+Desktop pet
+<img width="772" height="272" alt="image" src="https://github.com/user-attachments/assets/94f858cd-b752-464b-8cd8-143d82dcef86" />
+<img width="454" height="268" alt="image" src="https://github.com/user-attachments/assets/88f47287-7ffc-426c-bbc7-442dd31af8c3" />
+<img width="383" height="145" alt="image" src="https://github.com/user-attachments/assets/44fff517-8ae7-4ac2-aa10-ca5e164bc389" />
+
+
+---
 
 ## 🏗️ Architecture
 
