@@ -37,8 +37,18 @@ Daily News Function
 User Profile Setting Page
 <img width="1120" height="955" alt="image" src="https://github.com/user-attachments/assets/bb21e2ed-7fc0-43f4-81c3-85e8db7fdcb0" />
 Voice Setting Page
+
+
+
+
+
 <img width="580" height="783" alt="image" src="https://github.com/user-attachments/assets/cb9074c6-5f29-438a-b682-60f2b9bcde50" />
 Preview 3d model page
+
+
+
+
+
 <img width="1906" height="971" alt="image" src="https://github.com/user-attachments/assets/2c4e7e97-43d8-47e3-936a-9021e88549ff" />
 Desktop pet
 <img width="772" height="272" alt="image" src="https://github.com/user-attachments/assets/94f858cd-b752-464b-8cd8-143d82dcef86" />
