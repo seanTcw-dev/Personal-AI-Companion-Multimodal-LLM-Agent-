@@ -28,6 +28,10 @@ Login Page
 <img width="1885" height="971" alt="image" src="https://github.com/user-attachments/assets/abc97a2f-3f64-4f37-8369-a609e5610aae" />
 Main Interface
 <img width="1897" height="950" alt="image" src="https://github.com/user-attachments/assets/ea3d5380-46cd-4eeb-aa0e-d1fddbfce872" />
+Learning Workspace
+<img width="872" height="371" alt="image" src="https://github.com/user-attachments/assets/f262e2af-dfec-4f88-9052-12182ecb4c36" />
+Daily News Function 
+<img width="878" height="401" alt="image" src="https://github.com/user-attachments/assets/fe4d0574-f658-4ea1-b054-8ec310023840" />
 User Profile Setting Page
 <img width="1120" height="955" alt="image" src="https://github.com/user-attachments/assets/bb21e2ed-7fc0-43f4-81c3-85e8db7fdcb0" />
 Voice Setting Page
@@ -38,6 +42,8 @@ Desktop pet
 <img width="772" height="272" alt="image" src="https://github.com/user-attachments/assets/94f858cd-b752-464b-8cd8-143d82dcef86" />
 <img width="454" height="268" alt="image" src="https://github.com/user-attachments/assets/88f47287-7ffc-426c-bbc7-442dd31af8c3" />
 <img width="383" height="145" alt="image" src="https://github.com/user-attachments/assets/44fff517-8ae7-4ac2-aa10-ca5e164bc389" />
+<img width="874" height="413" alt="image" src="https://github.com/user-attachments/assets/d2a26af7-2abf-4508-886e-ae3f8a629703" />
+
 Telegram interface
 ![WhatsApp Image 2026-03-19 at 22 47 55](https://github.com/user-attachments/assets/2ac12be1-96f0-448f-920c-5ab6063b1625)
 
