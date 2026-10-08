@@ -30,6 +30,8 @@ Main Interface
 <img width="1897" height="950" alt="image" src="https://github.com/user-attachments/assets/ea3d5380-46cd-4eeb-aa0e-d1fddbfce872" />
 Learning Workspace
 <img width="872" height="371" alt="image" src="https://github.com/user-attachments/assets/f262e2af-dfec-4f88-9052-12182ecb4c36" />
+
+
 Daily News Function 
 <img width="878" height="401" alt="image" src="https://github.com/user-attachments/assets/fe4d0574-f658-4ea1-b054-8ec310023840" />
 User Profile Setting Page
